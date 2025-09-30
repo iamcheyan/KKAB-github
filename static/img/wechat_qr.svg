@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- 简易占位二维码风格块状图，仅作示意，可替换为真实二维码 -->
+  <rect width="120" height="120" fill="#fff"/>
+  <rect x="8" y="8" width="28" height="28" fill="#000"/>
+  <rect x="84" y="8" width="28" height="28" fill="#000"/>
+  <rect x="8" y="84" width="28" height="28" fill="#000"/>
+  <g fill="#000">
+    <rect x="48" y="8" width="8" height="8"/>
+    <rect x="64" y="8" width="8" height="8"/>
+    <rect x="48" y="24" width="8" height="8"/>
+    <rect x="64" y="24" width="8" height="8"/>
+    <rect x="40" y="40" width="8" height="8"/>
+    <rect x="56" y="40" width="8" height="8"/>
+    <rect x="72" y="40" width="8" height="8"/>
+    <rect x="40" y="56" width="8" height="8"/>
+    <rect x="56" y="56" width="8" height="8"/>
+    <rect x="72" y="56" width="8" height="8"/>
+    <rect x="40" y="72" width="8" height="8"/>
+    <rect x="56" y="72" width="8" height="8"/>
+    <rect x="72" y="72" width="8" height="8"/>
+    <rect x="48" y="92" width="8" height="8"/>
+    <rect x="64" y="92" width="8" height="8"/>
+  </g>
+</svg>

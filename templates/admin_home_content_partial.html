@@ -1,0 +1,252 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="h4 mb-0 title-serif">トップページ内容 (JSON編集)</h2>
+  <div class="d-flex gap-2">
+    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="formatJson()">フォーマット</button>
+    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="resetJson()">リセット</button>
+    <button type="button" class="btn btn-outline-primary btn-sm" onclick="restoreDefaultJson()">デフォルトに戻す</button>
+  </div>
+</div>
+
+{% if flash_message %}
+<div class="alert alert-{{ flash_type or 'success' }} alert-dismissible fade show" role="alert">
+  {{ flash_message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+<div class="alert alert-info">
+  <h5 class="alert-heading">JSON構造説明</h5>
+  <p class="mb-2">このJSONファイルはトップページの内容を管理します。以下の構造で編集してください：</p>
+  <ul class="mb-2 small">
+    <li><code>hero</code>: ヒーローセクション（kicker, title, subtitle, badge, points）</li>
+    <li><code>info</code>: 情報セクション（hours, station）</li>
+    <li><code>cta</code>: ボタンテキスト（book, rooms）</li>
+    <li>各フィールドは <code>ja</code>（日本語）、<code>en</code>（英語）、<code>zh</code>（中国語）の3言語対応</li>
+  </ul>
+  <p class="mb-0 small text-muted">
+    <i class="bi bi-info-circle me-1"></i>
+    <strong>ヒント:</strong> 編集に失敗した場合は「デフォルトに戻す」ボタンで元の設定に復元できます。
+  </p>
+</div>
+
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+  <div class="mb-3">
+    <label for="json_content" class="form-label fw-semibold">JSON内容</label>
+    <textarea 
+      id="json_content" 
+      name="json_content" 
+      class="form-control font-monospace" 
+      rows="30" 
+      style="font-size: 14px; line-height: 1.4;"
+      placeholder="JSON内容をここに貼り付けてください...">{{ json_content or '' }}</textarea>
+    <div class="form-text">
+      JSON形式で編集してください。保存前にフォーマットボタンで構文をチェックできます。
+    </div>
+  </div>
+  
+  <div class="d-flex gap-2">
+    <button type="submit" class="btn-ink">保存</button>
+    <button type="button" class="btn-outline-ink" onclick="previewJson()">プレビュー</button>
+  </div>
+</form>
+
+<!-- JSONプレビューモーダル -->
+<div class="modal fade" id="jsonPreviewModal" tabindex="-1" aria-labelledby="jsonPreviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="jsonPreviewModalLabel">JSONプレビュー</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <pre id="jsonPreview" class="bg-light p-3 rounded" style="max-height: 500px; overflow-y: auto;"></pre>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function formatJson() {
+    const textarea = document.getElementById('json_content');
+    const content = textarea.value.trim();
+    
+    if (!content) {
+        alert('JSON内容を入力してください。');
+        return;
+    }
+    
+    try {
+        const parsed = JSON.parse(content);
+        const formatted = JSON.stringify(parsed, null, 2);
+        textarea.value = formatted;
+        
+        // エラー表示をクリア
+        textarea.classList.remove('is-invalid');
+        const feedback = textarea.nextElementSibling;
+        if (feedback && feedback.classList.contains('invalid-feedback')) {
+            feedback.remove();
+        }
+    } catch (error) {
+        textarea.classList.add('is-invalid');
+        let feedback = textarea.nextElementSibling;
+        if (!feedback || !feedback.classList.contains('invalid-feedback')) {
+            feedback = document.createElement('div');
+            feedback.className = 'invalid-feedback';
+            textarea.parentNode.appendChild(feedback);
+        }
+        feedback.textContent = `JSONエラー: ${error.message}`;
+    }
+}
+
+function resetJson() {
+    if (confirm('現在の内容をリセットしますか？')) {
+        document.getElementById('json_content').value = '';
+    }
+}
+
+function restoreDefaultJson() {
+    if (confirm('デフォルトのJSONに戻しますか？現在の内容は失われます。')) {
+        const defaultJson = {
+            "hero": {
+                "kicker": {
+                    "ja": "京都の静寂に包まれて",
+                    "en": "Embraced by Kyoto's Serenity",
+                    "zh": "被京都的宁静所包围"
+                },
+                "title": {
+                    "ja": "京町家スイート",
+                    "en": "Kyomachiya Suite",
+                    "zh": "京町家套房"
+                },
+                "subtitle": {
+                    "ja": "京都東山の静かな路地に佇む小さな宿で、心をほどく滞在を。",
+                    "en": "A small inn nestled in a quiet alley of Kyoto's Higashiyama, where you can unwind and relax.",
+                    "zh": "坐落在京都东山安静小巷中的小旅馆，让您放松心灵的住宿体验。"
+                },
+                "badge": {
+                    "ja": "伝統的な京町家",
+                    "en": "Traditional Kyomachiya",
+                    "zh": "传统京町家"
+                },
+                "points": [
+                    {
+                        "ja": "徒歩圏内の観光名所",
+                        "en": "Walking distance to major attractions",
+                        "zh": "步行范围内的观光景点"
+                    },
+                    {
+                        "ja": "伝統的な京町家建築",
+                        "en": "Traditional Kyomachiya architecture",
+                        "zh": "传统京町家建筑"
+                    },
+                    {
+                        "ja": "心を落ち着かせる空間",
+                        "en": "Peaceful and calming space",
+                        "zh": "令人平静的空间"
+                    }
+                ]
+            },
+            "info": {
+                "hours": {
+                    "ja": "多様な宿泊タイプをご用意しています",
+                    "en": "Multiple accommodation options available",
+                    "zh": "多种房源可供选择"
+                },
+                "station": {
+                    "ja": "一戸建てタイプもあり、ご家族での滞在に最適です",
+                    "en": "Detached house available, ideal for families",
+                    "zh": "提供一户建房源，满足全家居住需要"
+                }
+            },
+            "cta": {
+                "book": {
+                    "ja": "予約する",
+                    "en": "Book Now",
+                    "zh": "立即预订"
+                },
+                "rooms": {
+                    "ja": "客室を見る",
+                    "en": "View Rooms",
+                    "zh": "查看客房"
+                }
+            }
+        };
+        
+        const formattedJson = JSON.stringify(defaultJson, null, 2);
+        document.getElementById('json_content').value = formattedJson;
+        
+        // エラー表示をクリア
+        const textarea = document.getElementById('json_content');
+        textarea.classList.remove('is-invalid');
+        const feedback = textarea.nextElementSibling;
+        if (feedback && feedback.classList.contains('invalid-feedback')) {
+            feedback.remove();
+        }
+        
+        // 成功メッセージを表示
+        showMessage('デフォルトのJSONに復元しました。', 'success');
+    }
+}
+
+function previewJson() {
+    const textarea = document.getElementById('json_content');
+    const content = textarea.value.trim();
+    
+    if (!content) {
+        alert('JSON内容を入力してください。');
+        return;
+    }
+    
+    try {
+        const parsed = JSON.parse(content);
+        const formatted = JSON.stringify(parsed, null, 2);
+        document.getElementById('jsonPreview').textContent = formatted;
+        
+        const modal = new bootstrap.Modal(document.getElementById('jsonPreviewModal'));
+        modal.show();
+    } catch (error) {
+        alert(`JSONエラー: ${error.message}`);
+    }
+}
+
+// メッセージ表示関数
+function showMessage(message, type = 'success') {
+    // 既存のアラートを削除
+    const existingAlert = document.querySelector('.alert');
+    if (existingAlert) {
+        existingAlert.remove();
+    }
+    
+    // 新しいアラートを作成
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.setAttribute('role', 'alert');
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    
+    // フォームの前に挿入
+    const form = document.querySelector('form');
+    form.parentNode.insertBefore(alertDiv, form);
+    
+    // 3秒後に自動で非表示
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 3000);
+}
+
+// 自動フォーマット（Ctrl+S）
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 's') {
+        e.preventDefault();
+        formatJson();
+    }
+});
+</script>

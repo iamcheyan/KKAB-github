@@ -1,0 +1,65 @@
+{
+  "hero": {
+    "kicker": {
+      "ja": "京都の静寂に包まれて",
+      "en": "Embraced by Kyoto's Serenity",
+      "zh": "被京都的宁静所包围"
+    },
+    "title": {
+      "ja": "京町家スイート",
+      "en": "Kyomachiya Suite",
+      "zh": "京町家套房"
+    },
+    "subtitle": {
+      "ja": "京都東山の静かな路地に佇む小さな宿で、心をほどく滞在を。",
+      "en": "A small inn nestled in a quiet alley of Kyoto's Higashiyama, where you can unwind and relax.",
+      "zh": "坐落在京都东山安静小巷中的小旅馆，让您放松心灵的住宿体验。"
+    },
+    "badge": {
+      "ja": "伝統的な京町家",
+      "en": "Traditional Kyomachiya",
+      "zh": "传统京町家"
+    },
+    "points": [
+      {
+        "ja": "徒歩圏内の観光名所",
+        "en": "Walking distance to major attractions",
+        "zh": "步行范围内的观光景点"
+      },
+      {
+        "ja": "伝統的な京町家建築",
+        "en": "Traditional Kyomachiya architecture",
+        "zh": "传统京町家建筑"
+      },
+      {
+        "ja": "心を落ち着かせる空間",
+        "en": "Peaceful and calming space",
+        "zh": "令人平静的空间"
+      }
+    ]
+  },
+  "info": {
+    "hours": {
+      "ja": "多様な宿泊タイプをご用意しています",
+      "en": "Multiple accommodation options available",
+      "zh": "多种房源可供选择"
+    },
+    "station": {
+      "ja": "一戸建てタイプもあり、ご家族での滞在に最適です",
+      "en": "Detached house available, ideal for families",
+      "zh": "提供一户建房源，满足全家居住需要"
+    }
+  },
+  "cta": {
+    "book": {
+      "ja": "予約する",
+      "en": "Book Now",
+      "zh": "立即预订"
+    },
+    "rooms": {
+      "ja": "客室を見る",
+      "en": "View Rooms",
+      "zh": "查看客房"
+    }
+  }
+}

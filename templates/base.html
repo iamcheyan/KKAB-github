@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="{{ current_locale }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}易居 - Kakuka Anbo Co., Ltd.{% endblock %}</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="{% block meta_description %}京都传统民宿，提供舒适的和式住宿体验。位于京都中心，交通便利，是体验日本传统文化的理想选择。{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}京都民宿,和式住宿,日本传统文化,京都旅游,民宿预订,Airbnb京都{% endblock %}">
+    <meta name="author" content="Kakuka Anbo Co., Ltd.">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="{{ current_locale }}">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:title" content="{% block og_title %}{{ self.title() }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ self.meta_description() }}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ url_for('static', filename='img/logo.png', _external=True) }}{% endblock %}">
+    <meta property="og:site_name" content="Kakuka Anbo Co., Ltd.">
+    <meta property="og:locale" content="{% if current_locale == 'ja' %}ja_JP{% elif current_locale == 'zh' %}zh_CN{% else %}en_US{% endif %}">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ request.url }}">
+    <meta property="twitter:title" content="{% block twitter_title %}{{ self.title() }}{% endblock %}">
+    <meta property="twitter:description" content="{% block twitter_description %}{{ self.meta_description() }}{% endblock %}">
+    <meta property="twitter:image" content="{% block twitter_image %}{{ url_for('static', filename='img/logo.png', _external=True) }}{% endblock %}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='img/favicon.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='img/favicon.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='img/favicon.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  </head>
+  <body class="kyoto-body d-flex flex-column min-vh-100 {% block body_class %}{% endblock %}">
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light navbar-kyoto sticky-top shadow-sm">
+        <div class="container-xxl">
+          <a class="navbar-brand" href="{% if current_locale == 'ja' %}{{ url_for('index') }}{% else %}{{ url_for('index_with_locale', locale=current_locale) }}{% endif %}">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Kakuka Anbo Co., Ltd." class="logo-img">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item"><a class="nav-link" href="{% if current_locale == 'ja' %}{{ url_for('index') }}{% else %}{{ url_for('index_with_locale', locale=current_locale) }}{% endif %}">{{ t('nav.home') }}</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% if current_locale == 'ja' %}{{ url_for('rooms') }}{% else %}{{ url_for('rooms_with_locale', locale=current_locale) }}{% endif %}">{{ t('nav.rooms') }}</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% if current_locale == 'ja' %}{{ url_for('management') }}{% else %}{{ url_for('management_with_locale', locale=current_locale) }}{% endif %}">{{ t('nav.management') }}</a></li>
+              {# 预订入口改为直接在各处跳转 Airbnb，导航不再显示独立"预订" #}
+              <li class="nav-item"><a class="nav-link" href="{% if current_locale == 'ja' %}{{ url_for('contact') }}{% else %}{{ url_for('contact_with_locale', locale=current_locale) }}{% endif %}">{{ t('nav.contact') }}</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_login') }}">{{ t('nav.admin') }}</a></li>
+              {% if not request.path.startswith('/admin') %}
+              <li class="nav-item">
+                <div class="d-flex align-items-center gap-1">
+                  {% for lang in languages %}
+                    <a class="nav-link p-1 {% if lang == current_locale %}active{% endif %}" 
+                       href="{{ url_for('switch_language', locale=lang, next=request.full_path) }}"
+                       title="{{ t('lang.' ~ lang) }}">
+                      <img src="{{ url_for('static', filename='img/flags/' ~ lang ~ '.svg') }}" 
+                           alt="{{ t('lang.' ~ lang) }}" 
+                           class="flag-icon flag-clickable">
+                    </a>
+                  {% endfor %}
+                </div>
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="kyoto-main flex-grow-1">
+      <div class="container-kyoto">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="mt-2">
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+
+    <footer class="kyoto-footer mt-auto">
+      <div class="container-kyoto text-center d-grid gap-2">
+        <p>© {{ today.year }} Kakuka Anbo Co., Ltd.</p>
+        <p class="small">{{ t('footer.tagline') }}</p>
+      </div>
+    </footer>
+
+    <!-- 回到顶部按钮 -->
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">
+      <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq6O9gBi" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+  </body>
+</html>

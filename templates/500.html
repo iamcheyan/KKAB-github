@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}服务器错误 - Kakuka Anbo Co., Ltd.{% endblock %}
+{% block meta_description %}抱歉，服务器遇到了问题。我们正在努力修复，请稍后再试。{% endblock %}
+{% block body_class %}error-page{% endblock %}
+{% block content %}
+
+<div class="container-kyoto">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6 text-center">
+      <div class="error-content py-5">
+        <!-- 500图标 -->
+        <div class="error-icon mb-4">
+          <i class="bi bi-exclamation-triangle" style="font-size: 4rem; color: #dc3545;"></i>
+        </div>
+        
+        <!-- 错误标题 -->
+        <h1 class="display-4 title-serif mb-3">500</h1>
+        <h2 class="h4 mb-3">服务器内部错误</h2>
+        <p class="lead text-muted mb-4">
+          抱歉，服务器遇到了问题。<br>
+          我们正在努力修复，请稍后再试。
+        </p>
+        
+        <!-- 操作按钮 -->
+        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+          <a href="{{ url_for('index') }}" class="btn-ink">
+            <i class="bi bi-house me-2"></i>返回首页
+          </a>
+          <button onclick="location.reload()" class="btn-outline-ink">
+            <i class="bi bi-arrow-clockwise me-2"></i>重新加载
+          </button>
+          <a href="{{ url_for('contact') }}" class="btn-outline-ink">
+            <i class="bi bi-envelope me-2"></i>联系我们
+          </a>
+        </div>
+        
+        <!-- 帮助信息 -->
+        <div class="mt-5">
+          <div class="alert alert-info">
+            <h5 class="alert-heading">如果问题持续存在</h5>
+            <p class="mb-0">
+              请通过以下方式联系我们，我们会尽快解决：<br>
+              <strong>邮箱：</strong> info@kakuka-anbo.com<br>
+              <strong>电话：</strong> +81-75-XXX-XXXX
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.error-page {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+}
+
+.error-content {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.error-icon {
+  animation: pulse 2s infinite;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+</style>
+
+{% endblock %}

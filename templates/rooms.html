@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ t('rooms.list.intro.title') }} - Kakuka Anbo Co., Ltd.{% endblock %}
+{% block content %}
+<section class="rooms-intro">
+  <span class="section-header__kicker">{{ t('rooms.kicker') }}</span>
+  <h1 class="section-header__title">{{ t('rooms.list.intro.title') }}</h1>
+  <p class="section-header__lead">{{ t('rooms.list.intro.text') }}</p>
+</section>
+
+<section class="rooms-grid">
+  {% for room in rooms %}
+    <div class="room-teaser">
+    <a href="{{ url_for('room_detail', room_id=room.id) }}" class="room-teaser__image" aria-label="{{ localize(room, 'name') }}">
+      <img src="{{ media_url(room.image) }}" alt="{{ localize(room, 'name') }}">
+    </a>
+    <div class="room-teaser__body">
+      <h2 class="h4 title-serif">
+        <a href="{{ url_for('room_detail', room_id=room.id) }}" class="room-teaser__title-link">{{ localize(room, 'name') }}</a>
+      </h2>
+      <div class="room-teaser__desc room-description">
+        <a href="{{ url_for('room_detail', room_id=room.id) }}" class="room-teaser__desc-link">{{ localize(room, 'description') }}</a>
+      </div>
+      <div class="room-teaser__actions">
+        <a href="{{ url_for('room_detail', room_id=room.id) }}" class="btn-ink btn-sm">{{ t('rooms.button.details') }}</a>
+      </div>
+    </div>
+  </div>
+  {% else %}
+    <div class="alert alert-info">{{ t('rooms.alert.empty') }}</div>
+  {% endfor %}
+</section>
+{% endblock %}

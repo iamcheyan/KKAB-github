@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}页面未找到 - Kakuka Anbo Co., Ltd.{% endblock %}
+{% block meta_description %}抱歉，您访问的页面不存在。请检查URL是否正确，或返回首页继续浏览。{% endblock %}
+{% block body_class %}error-page{% endblock %}
+{% block content %}
+
+<div class="container-kyoto">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6 text-center">
+      <div class="error-content py-5">
+        <!-- 404图标 -->
+        <div class="error-icon mb-4">
+          <i class="bi bi-house-x" style="font-size: 4rem; color: var(--accent);"></i>
+        </div>
+        
+        <!-- 错误标题 -->
+        <h1 class="display-4 title-serif mb-3">404</h1>
+        <h2 class="h4 mb-3">页面未找到</h2>
+        <p class="lead text-muted mb-4">
+          抱歉，您访问的页面不存在或已被移动。<br>
+          请检查URL是否正确，或使用下面的链接继续浏览。
+        </p>
+        
+        <!-- 操作按钮 -->
+        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+          <a href="{{ url_for('index') }}" class="btn-ink">
+            <i class="bi bi-house me-2"></i>返回首页
+          </a>
+          <a href="{{ url_for('rooms') }}" class="btn-outline-ink">
+            <i class="bi bi-bed me-2"></i>查看房间
+          </a>
+          <a href="{{ url_for('contact') }}" class="btn-outline-ink">
+            <i class="bi bi-envelope me-2"></i>联系我们
+          </a>
+        </div>
+        
+        <!-- 搜索建议 -->
+        <div class="mt-5">
+          <h3 class="h6 mb-3">您可能在寻找：</h3>
+          <div class="row g-2">
+            <div class="col-6 col-md-3">
+              <a href="{{ url_for('rooms') }}" class="btn btn-outline-secondary btn-sm w-100">
+                房间预订
+              </a>
+            </div>
+            <div class="col-6 col-md-3">
+              <a href="{{ url_for('management') }}" class="btn btn-outline-secondary btn-sm w-100">
+                运营代行
+              </a>
+            </div>
+            <div class="col-6 col-md-3">
+              <a href="{{ url_for('contact') }}" class="btn btn-outline-secondary btn-sm w-100">
+                联系我们
+              </a>
+            </div>
+            <div class="col-6 col-md-3">
+              <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-sm w-100">
+                首页
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.error-page {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+}
+
+.error-content {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.error-icon {
+  animation: bounce 2s infinite;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+</style>
+
+{% endblock %}

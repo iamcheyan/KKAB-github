@@ -1,0 +1,655 @@
+{% extends "base.html" %}
+{% block title %}管理ダッシュボード - Kakuka Anbo Co., Ltd.{% endblock %}
+{% block content %}
+<div class="admin-dashboard">
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0 title-serif">管理ダッシュボード</h1>
+  <a href="{{ url_for('admin_logout') }}" class="btn-outline-ink">ログアウト</a>
+</div>
+
+<!-- 统计卡片 -->
+<div class="row g-3 mb-4">
+  <div class="col-12 col-sm-6 col-md-3">
+      <div class="card shadow-sm h-100 d-flex justify-content-center">
+        <div class="card-body text-center d-flex flex-column justify-content-center">
+          <h2 class="display-6">{{ messages_count }}</h2>
+          <p class="text-muted mb-0">お問い合わせ</p>
+        </div>
+      </div>
+    </div>
+  <div class="col-12 col-sm-6 col-md-3">
+    <div class="card shadow-sm h-100 d-flex justify-content-center">
+      <div class="card-body text-center d-flex flex-column justify-content-center">
+        <h2 class="display-6">{{ news_count }}</h2>
+        <p class="text-muted mb-0">公開中のお知らせ</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-6 col-md-3">
+    <div class="card shadow-sm h-100 d-flex justify-content-center">
+      <div class="card-body text-center d-flex flex-column justify-content-center">
+        <h2 class="display-6">{{ room_count }}</h2>
+        <p class="text-muted mb-0">登録済み施設</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-6 col-md-3">
+    <div class="card shadow-sm h-100 d-flex justify-content-center">
+      <div class="card-body text-center d-flex flex-column justify-content-center">
+        <p class="mb-1 text-muted" id="backupStatusLabel">
+          {% if last_backup_at %}最後のバックアップ{% else %}バックアップ状況{% endif %}
+        </p>
+        <h3 class="h5 mb-0" id="backupStatusTime">
+          {% if last_backup_at %}{{ last_backup_at.strftime('%Y-%m-%d %H:%M') }}{% else %}未実行{% endif %}
+        </h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 标签页导航 -->
+<ul class="nav nav-tabs admin-tabs mb-4" id="adminTabs" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="rooms-tab" data-bs-toggle="tab" data-bs-target="#rooms" type="button" role="tab" aria-controls="rooms" aria-selected="true">客室管理</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="news-tab" data-bs-toggle="tab" data-bs-target="#news" type="button" role="tab" aria-controls="news" aria-selected="false">お知らせ管理</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="contact-info-tab" data-bs-toggle="tab" data-bs-target="#contact-info" type="button" role="tab" aria-controls="contact-info" aria-selected="false">お問い合わせ情報</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="home-content-tab" data-bs-toggle="tab" data-bs-target="#home-content" type="button" role="tab" aria-controls="home-content" aria-selected="false">トップページ内容</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages" type="button" role="tab" aria-controls="messages" aria-selected="false">お問い合わせ一覧</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="false">ユーザー管理</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="backup-tab" data-bs-toggle="tab" data-bs-target="#backup" type="button" role="tab" aria-controls="backup" aria-selected="false">データバックアップ</button>
+  </li>
+</ul>
+
+<!-- 标签页内容 -->
+<div class="tab-content" id="adminTabsContent">
+  <!-- 客室管理标签页 -->
+  <div class="tab-pane fade show active admin-pane" id="rooms" role="tabpanel" aria-labelledby="rooms-tab">
+    <div id="rooms-content">
+      <!-- 这里将通过AJAX加载客室管理内容 -->
+      <div class="text-center py-5">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">読み込み中...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- お知らせ管理标签页 -->
+  <div class="tab-pane fade admin-pane" id="news" role="tabpanel" aria-labelledby="news-tab">
+    <div id="news-content">
+      <!-- 这里将通过AJAX加载お知らせ管理内容 -->
+    </div>
+  </div>
+
+  <!-- お問い合わせ情報标签页 -->
+  <div class="tab-pane fade admin-pane" id="contact-info" role="tabpanel" aria-labelledby="contact-info-tab">
+    <div id="contact-info-content">
+      <!-- 这里将通过AJAX加载お問い合わせ情報内容 -->
+    </div>
+  </div>
+
+  <!-- トップページ内容标签页 -->
+  <div class="tab-pane fade admin-pane" id="home-content" role="tabpanel" aria-labelledby="home-content-tab">
+    <div id="home-content-content">
+      <!-- 这里将通过AJAX加载トップページ内容 -->
+    </div>
+  </div>
+
+  <!-- お問い合わせ一覧标签页 -->
+  <div class="tab-pane fade admin-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab">
+    <div id="messages-content">
+      <!-- 这里将通过AJAX加载お問い合わせ一覧内容 -->
+    </div>
+  </div>
+
+  <!-- ユーザー管理タブ -->
+  <div class="tab-pane fade admin-pane" id="users" role="tabpanel" aria-labelledby="users-tab">
+    <div id="users-content">
+      <!-- ここでAJAXでユーザー管理内容を読み込みます -->
+    </div>
+  </div>
+
+  <!-- データバックアップタブ -->
+  <div class="tab-pane fade" id="backup" role="tabpanel" aria-labelledby="backup-tab">
+    <div class="form-frame">
+      <h2 class="h5 mb-4 title-serif">データバックアップエクスポート</h2>
+      <div class="row g-4">
+        <div class="col-12">
+          <div class="card position-relative backup-card">
+            <div class="card-body">
+              <h5 class="card-title">データベースバックアップ</h5>
+              <p class="card-text text-muted">
+                完全なデータベースをSQLファイルとしてエクスポートします。すべてのテーブル構造とデータが含まれます。
+                バックアップファイルはデータ復旧や移行に使用できます。
+              </p>
+              <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2">
+                <a href="{{ url_for('admin_backup') }}" class="btn-ink text-center" id="backupExportBtn">
+                  <i class="bi bi-download me-2"></i>SQLバックアップをエクスポート
+                </a>
+                <form method="post" action="{{ url_for('admin_restore') }}" enctype="multipart/form-data" class="d-flex align-items-center gap-2" id="backupImportForm">
+                  {{ restore_form.csrf_token }}
+                  <label class="btn-outline-ink mb-0" for="restoreFile">
+                    <i class="bi bi-upload me-2"></i>バックアップをインポート
+                  </label>
+                  <input type="file" id="restoreFile" name="backup_file" accept=".sql" class="d-none">
+                </form>
+              </div>
+              <div id="backupAlert"></div>
+            </div>
+            <div id="backupOverlay" class="backup-overlay d-none">
+              <div class="spinner-border text-light" role="status">
+                <span class="visually-hidden">処理中...</span>
+              </div>
+              <p class="mb-0 text-white" id="backupOverlayMessage">処理中...</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title">バックアップ内容：</h6>
+              <ul class="list-unstyled mb-0">
+                <li><i class="bi bi-check-circle text-success me-2"></i>客室情報 (rooms)</li>
+                <li><i class="bi bi-check-circle text-success me-2"></i>予約記録 (bookings)</li>
+                <li><i class="bi bi-check-circle text-success me-2"></i>お問い合わせメッセージ (messages)</li>
+                <li><i class="bi bi-check-circle text-success me-2"></i>お知らせ記事 (news)</li>
+                <li><i class="bi bi-check-circle text-success me-2"></i>ウェブサイト内容 (site_content)</li>
+                <li><i class="bi bi-check-circle text-success me-2"></i>管理者アカウント (admin)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title d-flex justify-content-between align-items-center">
+                バックアップ履歴
+                <button class="btn btn-sm btn-outline-secondary" onclick="refreshBackupList()">
+                  <i class="bi bi-arrow-clockwise me-1"></i>更新
+                </button>
+              </h6>
+              <div id="backupList">
+                <div class="text-center py-3">
+                  <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="visually-hidden">読み込み中...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = Array.from(document.querySelectorAll('#adminTabs button[data-bs-toggle="tab"]'));
+    const tabPanes = Array.from(document.querySelectorAll('#adminTabsContent .tab-pane'));
+    const hasBootstrapTabs = typeof window.bootstrap !== 'undefined' && typeof window.bootstrap.Tab !== 'undefined';
+
+    function activateTab(button, updateUrl = true) {
+        const targetSelector = button.getAttribute('data-bs-target');
+        if (!targetSelector) {
+            return null;
+        }
+
+        if (hasBootstrapTabs) {
+            window.bootstrap.Tab.getOrCreateInstance(button).show();
+        } else {
+            // Bootstrapが利用できない場合のフォールバックとして手動でタブのアクティブ状態を切り替え
+            tabButtons.forEach(function(btn) {
+                const isActive = btn === button;
+                btn.classList.toggle('active', isActive);
+                btn.setAttribute('aria-selected', String(isActive));
+            });
+
+            tabPanes.forEach(function(pane) {
+                const isTarget = `#${pane.id}` === targetSelector;
+                pane.classList.toggle('show', isTarget);
+                pane.classList.toggle('active', isTarget);
+            });
+        }
+
+        // URLパラメータを更新（手動クリック時のみ）
+        if (updateUrl) {
+            updateUrlParameter(targetSelector);
+        }
+
+        return targetSelector;
+    }
+
+    function loadTabContent(targetSelector) {
+        switch (targetSelector) {
+            case '#rooms':
+                loadRoomsContent();
+                break;
+            case '#news':
+                loadNewsContent();
+                break;
+            case '#contact-info':
+                loadContactInfoContent();
+                break;
+            case '#home-content':
+                loadHomeContentContent();
+                break;
+            case '#messages':
+                loadMessagesContent();
+                break;
+            case '#users':
+                loadUsersContent();
+                break;
+            case '#backup':
+                // バックアップタブはAJAX読み込み不要、内容はページに含まれています
+                loadBackupList(); // バックアップリストを読み込み
+                break;
+        }
+    }
+
+    tabButtons.forEach(function(tab) {
+        tab.addEventListener('click', function(event) {
+            const targetSelector = activateTab(this);
+            if (!hasBootstrapTabs) {
+                event.preventDefault();
+            }
+            if (!targetSelector) {
+                return;
+            }
+
+            const delay = hasBootstrapTabs ? 100 : 0;
+            setTimeout(function() {
+                loadTabContent(targetSelector);
+            }, delay);
+        });
+    });
+
+    // URLパラメータを更新する関数
+    function updateUrlParameter(targetSelector) {
+        const tabId = targetSelector.replace('#', '');
+        const url = new URL(window.location);
+        url.searchParams.set('tab', tabId);
+        window.history.pushState({}, '', url);
+    }
+
+    // URLパラメータからタブを復元する関数
+    function restoreTabFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tabParam = urlParams.get('tab');
+        
+        if (tabParam) {
+            const targetButton = document.querySelector(`#adminTabs button[data-bs-target="#${tabParam}"]`);
+            if (targetButton) {
+                activateTab(targetButton, false); // URL更新しない
+                
+                // タブ内容を読み込み
+                const targetSelector = targetButton.getAttribute('data-bs-target');
+                if (targetSelector) {
+                    const delay = hasBootstrapTabs ? 100 : 0;
+                    setTimeout(function() {
+                        loadTabContent(targetSelector);
+                    }, delay);
+                }
+                
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // ページ読み込み時にURLパラメータからタブを復元
+    function initializeTabs() {
+        const tabRestored = restoreTabFromUrl();
+        
+        // URLパラメータでタブが復元されなかった場合はデフォルトタブをアクティブ化
+        if (!tabRestored) {
+            const defaultTab = document.querySelector('#adminTabs .nav-link.active');
+            if (defaultTab) {
+                activateTab(defaultTab);
+                // デフォルトタブの内容も読み込み
+                const targetSelector = defaultTab.getAttribute('data-bs-target');
+                if (targetSelector) {
+                    const delay = hasBootstrapTabs ? 100 : 0;
+                    setTimeout(function() {
+                        loadTabContent(targetSelector);
+                    }, delay);
+                }
+            }
+        }
+    }
+    
+    // DOM完全読み込み後にタブを初期化
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeTabs);
+    } else {
+        initializeTabs();
+    }
+
+    // ブラウザの戻る/進むボタンに対応
+    window.addEventListener('popstate', function(event) {
+        restoreTabFromUrl();
+    });
+    
+    // バックアップリストを読み込む関数
+    function loadBackupList() {
+        fetch('/admin/backup/list')
+            .then(response => response.json())
+            .then(data => {
+                const backupList = document.getElementById('backupList');
+                if (data.backups && data.backups.length > 0) {
+                    let html = '<div class="table-responsive"><table class="table table-sm">';
+                    html += '<thead><tr><th>ファイル名</th><th>サイズ</th><th>作成日時</th><th>操作</th></tr></thead><tbody>';
+                    
+                    data.backups.forEach(backup => {
+                        const createdDate = new Date(backup.created).toLocaleString('ja-JP');
+                        html += `<tr>
+                            <td><code>${backup.filename}</code></td>
+                            <td>${backup.size_formatted}</td>
+                            <td>${createdDate}</td>
+                            <td>
+                                <a href="/admin/backup/download/${backup.filename}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-download me-1"></i>ダウンロード
+                                </a>
+                            </td>
+                        </tr>`;
+                    });
+                    
+                    html += '</tbody></table></div>';
+                    backupList.innerHTML = html;
+                } else {
+                    backupList.innerHTML = '<div class="text-center py-3 text-muted">バックアップファイルがありません</div>';
+                }
+            })
+            .catch(error => {
+                console.error('バックアップリストの読み込みに失敗:', error);
+                document.getElementById('backupList').innerHTML = '<div class="text-center py-3 text-danger">読み込みに失敗しました</div>';
+            });
+    }
+    
+    // バックアップリストを更新する関数
+    function refreshBackupList() {
+        const backupList = document.getElementById('backupList');
+        backupList.innerHTML = '<div class="text-center py-3"><div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">読み込み中...</span></div></div>';
+        loadBackupList();
+    }
+    
+    function loadRoomsContent() {
+        // 読み込み状態を表示
+        document.getElementById('rooms-content').innerHTML = '<div class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">読み込み中...</span></div></div>';
+        
+        fetch('/admin/rooms', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('rooms-content').innerHTML = html;
+            })
+            .catch(error => {
+                document.getElementById('rooms-content').innerHTML = '<div class="alert alert-danger">エラーが発生しました。</div>';
+            });
+    }
+    
+    function loadNewsContent() {
+        // 読み込み状態を表示
+        document.getElementById('news-content').innerHTML = '<div class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">読み込み中...</span></div></div>';
+        
+        fetch('/admin/news', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('news-content').innerHTML = html;
+            })
+            .catch(error => {
+                document.getElementById('news-content').innerHTML = '<div class="alert alert-danger">エラーが発生しました。</div>';
+            });
+    }
+    
+    function loadContactInfoContent() {
+        // 読み込み状態を表示
+        document.getElementById('contact-info-content').innerHTML = '<div class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">読み込み中...</span></div></div>';
+        
+        fetch('/admin/contact-content', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('contact-info-content').innerHTML = html;
+            })
+            .catch(error => {
+                document.getElementById('contact-info-content').innerHTML = '<div class="alert alert-danger">エラーが発生しました。</div>';
+            });
+    }
+    
+    function loadHomeContentContent() {
+        // 読み込み状態を表示
+        document.getElementById('home-content-content').innerHTML = '<div class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">読み込み中...</span></div></div>';
+        
+        fetch('/admin/home-content', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('home-content-content').innerHTML = html;
+            })
+            .catch(error => {
+                document.getElementById('home-content-content').innerHTML = '<div class="alert alert-danger">エラーが発生しました。</div>';
+            });
+    }
+    
+    function loadMessagesContent() {
+        // 読み込み状態を表示
+        document.getElementById('messages-content').innerHTML = '<div class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">読み込み中...</span></div></div>';
+        
+        fetch('/admin/messages', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('messages-content').innerHTML = html;
+            })
+            .catch(error => {
+                document.getElementById('messages-content').innerHTML = '<div class="alert alert-danger">エラーが発生しました。</div>';
+            });
+    }
+    
+    function loadUsersContent() {
+        // 読み込み状態を表示
+        document.getElementById('users-content').innerHTML = '<div class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">読み込み中...</span></div></div>';
+        
+        fetch('/admin/users', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('users-content').innerHTML = html;
+            })
+            .catch(error => {
+                document.getElementById('users-content').innerHTML = '<div class="alert alert-danger">エラーが発生しました。</div>';
+            });
+    }
+    
+    // バックアップ関連の進捗・通知
+    const backupExportBtn = document.getElementById('backupExportBtn');
+    const backupImportForm = document.getElementById('backupImportForm');
+    const backupFileInput = document.getElementById('restoreFile');
+    const backupOverlay = document.getElementById('backupOverlay');
+    const backupOverlayMessage = document.getElementById('backupOverlayMessage');
+    const backupAlertContainer = document.getElementById('backupAlert');
+    const backupStatusLabel = document.getElementById('backupStatusLabel');
+    const backupStatusTime = document.getElementById('backupStatusTime');
+
+    function toggleBackupOverlay(show, message) {
+        if (!backupOverlay) return;
+        backupOverlay.classList.toggle('d-none', !show);
+        if (backupOverlayMessage && message) {
+            backupOverlayMessage.textContent = message;
+        }
+    }
+
+    function pushBackupAlert(type, message) {
+        if (!backupAlertContainer) return;
+        const alertType = type === 'success' ? 'success' : type === 'error' ? 'danger' : 'info';
+        backupAlertContainer.innerHTML = `
+          <div class="alert alert-${alertType} alert-dismissible fade show mt-3" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        `;
+        setTimeout(() => {
+          const alertEl = backupAlertContainer.querySelector('.alert');
+          if (!alertEl) return;
+          if (window.bootstrap && window.bootstrap.Alert) {
+            window.bootstrap.Alert.getOrCreateInstance(alertEl).close();
+          } else {
+            alertEl.classList.remove('show');
+            alertEl.addEventListener('transitionend', () => alertEl.remove(), { once: true });
+          }
+        }, 4000);
+    }
+
+    function updateBackupTime(isoTimestamp) {
+        if (!isoTimestamp || !backupStatusLabel || !backupStatusTime) return;
+        const date = new Date(isoTimestamp);
+        backupStatusLabel.textContent = '最後のバックアップ';
+        if (!Number.isNaN(date.getTime())) {
+            backupStatusTime.textContent = date.toLocaleString('ja-JP', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } else {
+            backupStatusTime.textContent = isoTimestamp;
+        }
+    }
+
+    if (backupExportBtn) {
+        backupExportBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            const url = backupExportBtn.getAttribute('href');
+            if (!url) {
+                pushBackupAlert('error', 'バックアップURLが見つかりませんでした。');
+                return;
+            }
+            toggleBackupOverlay(true, 'エクスポート中...');
+            fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(async (response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    const disposition = response.headers.get('Content-Disposition') || '';
+                    const match = disposition.match(/filename="?([^";]+)"?/);
+                    const filename = match ? match[1] : 'guesthouse_backup.sql';
+                    const timestamp = response.headers.get('X-Backup-Timestamp');
+                    const blob = await response.blob();
+                    return { blob, filename, timestamp };
+                })
+                .then(({ blob, filename, timestamp }) => {
+                    const objectUrl = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = objectUrl;
+                    link.download = filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    URL.revokeObjectURL(objectUrl);
+                    if (timestamp) {
+                        updateBackupTime(timestamp);
+                    }
+                    pushBackupAlert('success', 'バックアップのエクスポートが完了しました。');
+                    // バックアップリストを更新
+                    if (typeof loadBackupList === 'function') {
+                        loadBackupList();
+                    }
+                })
+                .catch((error) => {
+                    pushBackupAlert('error', `バックアップのエクスポートに失敗しました: ${error.message}`);
+                })
+                .finally(() => {
+                    toggleBackupOverlay(false);
+                });
+        });
+    }
+
+    if (backupFileInput && backupImportForm) {
+        backupFileInput.addEventListener('change', () => {
+            if (!backupFileInput.files || backupFileInput.files.length === 0) {
+                return;
+            }
+            const file = backupFileInput.files[0];
+            if (!file.name.toLowerCase().endsWith('.sql')) {
+                pushBackupAlert('error', 'SQLファイルのみアップロードできます。');
+                backupImportForm.reset();
+                return;
+            }
+            const formData = new FormData(backupImportForm);
+            toggleBackupOverlay(true, 'インポート中...');
+            fetch(backupImportForm.getAttribute('action'), {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: formData
+            })
+                .then(async (response) => {
+                    const data = await response.json().catch(() => null);
+                    if (!response.ok || !data) {
+                        throw new Error(data && data.message ? data.message : `HTTP ${response.status}`);
+                    }
+                    if (data.status !== 'ok') {
+                        throw new Error(data.message || 'バックアップのインポートに失敗しました');
+                    }
+                    if (data.timestamp) {
+                        updateBackupTime(data.timestamp);
+                    }
+                    pushBackupAlert('success', data.message || 'バックアップのインポートが完了しました。');
+                    // バックアップリストを更新
+                    if (typeof loadBackupList === 'function') {
+                        loadBackupList();
+                    }
+                })
+                .catch((error) => {
+                    pushBackupAlert('error', `バックアップのインポートに失敗しました: ${error.message}`);
+                })
+                .finally(() => {
+                    toggleBackupOverlay(false);
+                    backupImportForm.reset();
+                });
+        });
+    }
+});
+</script>
+</div>
+{% endblock %}

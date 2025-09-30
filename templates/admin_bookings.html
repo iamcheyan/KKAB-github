@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}予約一覧 - Kakuka Anbo Co., Ltd.{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0 title-serif">予約一覧</h1>
+  <div>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn-outline-ink me-2">ダッシュボード</a>
+    <a href="{{ url_for('admin_logout') }}" class="btn btn-outline-danger">ログアウト</a>
+  </div>
+</div>
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>客室</th>
+        <th>お名前</th>
+        <th>チェックイン</th>
+        <th>チェックアウト</th>
+        <th>人数</th>
+        <th>ステータス</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for booking in bookings %}
+        <tr>
+          <td>{{ rooms[booking.room_id].name }}</td>
+          <td>
+            <div class="fw-semibold">{{ booking.name }}</div>
+            <div class="text-muted small">{{ booking.email }}</div>
+          </td>
+          <td>{{ booking.check_in }}</td>
+          <td>{{ booking.check_out }}</td>
+          <td>{{ booking.guests }}</td>
+          <td>
+            <span class="badge bg-primary">{{ booking_status(booking.status) }}</span>
+          </td>
+          <td>
+            <form method="post" class="d-flex flex-wrap gap-2 align-items-center">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <input type="hidden" name="booking_id" value="{{ booking.id }}">
+              <select name="status" class="form-select form-select-sm w-auto">
+                {% for value, label in [('Pending', '確認待ち'), ('Confirmed', '確定'), ('Cancelled', 'キャンセル')] %}
+                  <option value="{{ value }}" {% if booking.status == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+              <button type="submit" name="action" value="update" class="btn btn-sm btn-ink">更新</button>
+              <button type="submit" name="action" value="delete" class="btn btn-sm btn-outline-danger" onclick="return confirm('この予約を削除しますか？');">削除</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="7" class="text-center py-4">予約はまだありません。</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

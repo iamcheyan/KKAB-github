@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}{{ t('contact.heading') }} - Kakuka Anbo Co., Ltd.{% endblock %}
+{% block content %}
+<div class="row g-5 align-items-start">
+  <div class="col-12 col-lg-6">
+    <div class="form-frame">
+      <h1 class="h3 mb-3 title-serif">{{ t('contact.heading') }}</h1>
+      <p class="text-muted">{{ t('contact.intro') }}</p>
+      <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+          <label class="form-label">{{ t('contact.form.name') }}</label>
+          {{ form.name(class_='form-control', placeholder=t('contact.form.name')) }}
+          {% for error in form.name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="mb-3">
+          <label class="form-label">{{ t('contact.form.email') }}</label>
+          {{ form.email(class_='form-control', placeholder=t('contact.form.email')) }}
+          {% for error in form.email.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="mb-3">
+          <label class="form-label">{{ t('contact.form.message') }}</label>
+          {{ form.message(class_='form-control', rows=5, placeholder=t('contact.form.message')) }}
+          {% for error in form.message.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        {{ form.submit(class_='btn-ink', value=t('contact.form.submit')) }}
+      </form>
+    </div>
+  </div>
+  <div class="col-12 col-lg-6">
+    <div class="contact-side h-100">
+      {% set wechat_qr = url_for('static', filename='img/wx.jpg') %}
+      {% set line_qr = url_for('static', filename='img/line.jpg') %}
+      <h2 class="h5 mb-3 title-serif">KKAB Co., Ltd. </h2>
+
+      {% if contact_content %}
+        {% set extra = contact_content.extra or {} %}
+        {% if extra.get('wechat_qr') %}
+          {% set wechat_qr = media_url(extra.wechat_qr) %}
+        {% endif %}
+        {% if extra.get('line_qr') %}
+          {% set line_qr = media_url(extra.line_qr) %}
+        {% endif %}
+        {% if extra.get('phone') %}
+          <p class="mb-2"><strong>{{ t('contact.info.phone') }}</strong>：{{ extra.phone }}</p>
+        {% endif %}
+        {% if extra.get('email') %}
+          <p class="mb-4"><strong>{{ t('contact.info.email') }}</strong>：{{ extra.email }}</p>
+        {% endif %}
+
+       
+
+        {% if contact_content.body_ja or contact_content.body_en or contact_content.body_zh %}
+          <div class="mt-4">
+            {% if current_locale == 'zh' and contact_content.body_zh %}
+              <p>{{ contact_content.body_zh }}</p>
+            {% elif current_locale == 'en' and contact_content.body_en %}
+              <p>{{ contact_content.body_en }}</p>
+            {% elif contact_content.body_ja %}
+              <p>{{ contact_content.body_ja }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% else %}
+        <!-- 默认内容 -->
+        <p class="mb-2"><strong>{{ t('contact.info.phone') }}</strong>：075-123-4567（10:00-18:00）</p>
+        <p class="mb-4"><strong>{{ t('contact.info.email') }}</strong>：stay@guesthouse-kyoto.jp</p>
+        <h3 class="h6 title-serif">{{ t('contact.info.access') }}</h3>
+        <ul>
+          <li>{{ t('contact.access.list1') }}</li>
+          <li>{{ t('contact.access.list2') }}</li>
+          <li>{{ t('contact.access.list3') }}</li>
+        </ul>
+      {% endif %}
+
+      <div class="contact-qr-grid mt-4">
+        <div class="contact-qr-item">
+          <h3 class="contact-qr-title">{{ t('contact.info.wechat') }}</h3>
+          <img src="{{ wechat_qr }}" alt="{{ t('contact.info.wechat') }}" class="contact-qr-image">
+        </div>
+        <div class="contact-qr-item">
+          <h3 class="contact-qr-title">{{ t('contact.info.line') }}</h3>
+          <img src="{{ line_qr }}" alt="{{ t('contact.info.line') }}" class="contact-qr-image">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

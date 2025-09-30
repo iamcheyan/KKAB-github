@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}お問い合わせ情報管理 - Kakuka Anbo Co., Ltd.{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0 title-serif">お問い合わせ情報管理</h1>
+  <a href="{{ url_for('admin_dashboard') }}" class="btn-outline-ink">ダッシュボード</a>
+</div>
+
+<div class="form-frame">
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="row g-3">
+      <div class="col-12 col-lg-4">
+        <label class="form-label">{{ form.heading_ja.label }}</label>
+        {{ form.heading_ja(class_='form-control') }}
+        {% for error in form.heading_ja.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-4">
+        <label class="form-label">{{ form.heading_en.label }}</label>
+        {{ form.heading_en(class_='form-control') }}
+        {% for error in form.heading_en.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-4">
+        <label class="form-label">{{ form.heading_zh.label }}</label>
+        {{ form.heading_zh(class_='form-control') }}
+        {% for error in form.heading_zh.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12">
+        <label class="form-label">{{ form.body_ja.label }}</label>
+        {{ form.body_ja(class_='form-control', rows=3) }}
+        {% for error in form.body_ja.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12">
+        <label class="form-label">{{ form.body_en.label }}</label>
+        {{ form.body_en(class_='form-control', rows=3) }}
+        {% for error in form.body_en.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12">
+        <label class="form-label">{{ form.body_zh.label }}</label>
+        {{ form.body_zh(class_='form-control', rows=3) }}
+        {% for error in form.body_zh.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-4">
+        <label class="form-label">{{ form.address_ja.label }}</label>
+        {{ form.address_ja(class_='form-control') }}
+        {% for error in form.address_ja.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-4">
+        <label class="form-label">{{ form.address_en.label }}</label>
+        {{ form.address_en(class_='form-control') }}
+        {% for error in form.address_en.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-4">
+        <label class="form-label">{{ form.address_zh.label }}</label>
+        {{ form.address_zh(class_='form-control') }}
+        {% for error in form.address_zh.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-4">
+        <label class="form-label">{{ form.phone.label }}</label>
+        {{ form.phone(class_='form-control') }}
+        {% for error in form.phone.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-4">
+        <label class="form-label">{{ form.email.label }}</label>
+        {{ form.email(class_='form-control') }}
+        {% for error in form.email.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-12 col-lg-4">
+        <label class="form-label">{{ form.wechat_qr.label }}</label>
+        {{ form.wechat_qr(class_='form-control') }}
+        {% for error in form.wechat_qr.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        <div class="form-text">static/img などへのパス、またはフルURLを指定してください。</div>
+      </div>
+      <div class="col-12">
+        {{ form.submit(class_='btn-ink') }}
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

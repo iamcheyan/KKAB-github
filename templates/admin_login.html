@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}管理ログイン - Kakuka Anbo Co., Ltd.{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h1 class="h4 mb-3 text-center title-serif">管理ログイン</h1>
+        <form method="post" novalidate>
+          {{ form.hidden_tag() }}
+          <div class="mb-3">
+            <label class="form-label">{{ form.username.label }}</label>
+            {{ form.username(class_='form-control') }}
+            {% for error in form.username.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{ form.password.label }}</label>
+            {{ form.password(class_='form-control', type='password') }}
+            {% for error in form.password.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+          {{ form.submit(class_='btn-ink w-100') }}
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

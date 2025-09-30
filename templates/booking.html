@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}ご予約 - Kakuka Anbo Co., Ltd.{% endblock %}
+{% block content %}
+<div class="row g-5 align-items-start">
+  <div class="col-12 col-lg-7">
+    <div class="form-frame">
+      <h1 class="h3 mb-3 title-serif">宿泊リクエスト</h1>
+      <p class="text-muted">以下のフォームにご記入ください。空室状況を確認の上、24時間以内にメールにてご連絡いたします。</p>
+      <form method="post" novalidate class="row g-3">
+        {{ form.hidden_tag() }}
+        <div class="col-12 col-md-6">
+          <label class="form-label">{{ form.room.label }}</label>
+          {{ form.room(class_='form-select') }}
+          {% for error in form.room.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label">{{ form.guests.label }}</label>
+          {{ form.guests(class_='form-control', min=1) }}
+          {% for error in form.guests.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label">{{ form.check_in.label }}</label>
+          {{ form.check_in(class_='form-control', type='date') }}
+          {% for error in form.check_in.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label">{{ form.check_out.label }}</label>
+          {{ form.check_out(class_='form-control', type='date') }}
+          {% for error in form.check_out.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label">{{ form.name.label }}</label>
+          {{ form.name(class_='form-control', placeholder='お名前') }}
+          {% for error in form.name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label">{{ form.email.label }}</label>
+          {{ form.email(class_='form-control', placeholder='メールアドレス') }}
+          {% for error in form.email.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="col-12">
+          {{ form.submit(class_='btn-ink') }}
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="col-12 col-lg-5">
+    <div class="detail-side">
+      <h2 class="h5 title-serif">ご予約前に</h2>
+      <ul class="room-facilities">
+        <li>小学生以下のお子さまの添い寝は無料です。</li>
+        <li>連泊の場合は3泊目に簡易清掃を行います。</li>
+        <li>食材アレルギーがある場合は事前にお知らせください。</li>
+        <li>館内は全館禁煙です。庭の喫煙スペースをご利用ください。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}お問い合わせ一覧 - Kakuka Anbo Co., Ltd.{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0 title-serif">お問い合わせ一覧</h1>
+  <div>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn-outline-ink me-2">ダッシュボード</a>
+    <a href="{{ url_for('admin_logout') }}" class="btn btn-outline-danger">ログアウト</a>
+  </div>
+</div>
+<div class="list-group shadow-sm">
+  {% for message in messages %}
+    <div class="list-group-item">
+      <div class="d-flex justify-content-between">
+        <div>
+          <h2 class="h5 mb-1">{{ message.name }}</h2>
+          <div class="text-muted small">{{ message.email }} · {{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+        </div>
+        <form method="post" onsubmit="return confirm('このメッセージを削除しますか？');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="message_id" value="{{ message.id }}">
+          <button class="btn btn-sm btn-outline-danger">削除</button>
+        </form>
+      </div>
+      <p class="mb-0 mt-3">{{ message.content }}</p>
+    </div>
+  {% else %}
+    <div class="list-group-item text-center py-4">お問い合わせはまだありません。</div>
+  {% endfor %}
+</div>
+{% endblock %}

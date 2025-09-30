@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% block title %}{{ localize(room, 'name') }} - Kakuka Anbo Co., Ltd.{% endblock %}
+{% block content %}
+
+<!-- 固定顶部栏 -->
+<div class="room-sticky-header" id="roomStickyHeader">
+  <div class="room-sticky-content">
+    <h1 class="room-sticky-title">{{ localize(room, 'name') }}</h1>
+    <div class="room-sticky-actions">
+      {% if room.airbnb_url %}
+        <a href="{{ room.airbnb_url }}" target="_blank" rel="noopener" class="room-sticky-btn primary">
+          <i class="bi bi-airplane me-2"></i>{{ t('rooms.detail.book_airbnb') }}
+        </a>
+      {% endif %}
+      <a href="{{ url_for('rooms') }}" class="room-sticky-btn secondary">
+        <i class="bi bi-arrow-left me-2"></i>{{ t('rooms.button.back_to_rooms') }}
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- 页面标题区域 -->
+<section class="page-header">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-10">
+        <div class="page-title-content text-center" style="margin-bottom: 1.5rem;">
+          <h1 class="page-title" style="margin-bottom: 1.2rem;">{{ localize(room, 'name') }}</h1>
+          {% if localize(room, 'address') %}
+            <p class="page-subtitle" style="margin-bottom: 2.2rem;">{{ localize(room, 'address') }}</p>
+          {% endif %}
+        </div>
+        {% if room.permit_number %}
+        <div class="d-flex flex-column align-items-center" style="gap: 0.5rem;">
+          <span class="fw-semibold" style="font-size: 1rem; letter-spacing: 0.12em;">{{ t('rooms.detail.permit_label') }}</span>
+          <span style="font-size: 1rem;">{{ room.permit_number }}</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-block">
+  <div class="container">
+    <div class="row g-5 align-items-start">
+      <!-- 左侧：照片 -->
+      <div class="col-12 col-lg-5">
+        <div class="room-image-container">
+          <img src="{{ media_url(room.image) }}" 
+               alt="{{ localize(room, 'name') }}" 
+               class="img-fluid rounded shadow-sm room-image">
+        </div>
+        
+         <!-- 操作按钮，居中显示 -->
+         <div class="d-flex flex-wrap gap-3 mt-4 justify-content-center">
+           {% if room.airbnb_url %}
+             <a href="{{ room.airbnb_url }}" target="_blank" rel="noopener" class="room-detail-action-btn" id="originalBookButton">
+               <i class="bi bi-airplane me-2"></i>{{ t('rooms.detail.book_airbnb') }}
+             </a>
+           {% endif %}
+         </div>
+      </div>
+      
+      <!-- 右侧：房间信息 -->
+      <div class="col-12 col-lg-7">
+       
+
+        <!-- 房间描述 -->
+        <div class="mb-4">
+          <h2 class="h5 mb-3 title-serif">{{ t('rooms.detail.about') }}</h2>
+          <div class="text-muted room-description">{{ localize(room, 'description') }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 设施与服务 -->
+<section class="section-block">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-12">
+        <h2 class="section-title text-center mb-5">{{ t('rooms.facilities.title') }}</h2>
+      </div>
+      
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="facility-card text-center">
+          <div class="facility-icon mb-3">
+            <i class="bi bi-wifi"></i>
+          </div>
+          <h4 class="h6 mb-2">{{ t('rooms.facilities.wifi') }}</h4>
+          <p class="text-muted small">{{ t('rooms.facilities.wifi_desc') }}</p>
+        </div>
+      </div>
+      
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="facility-card text-center">
+          <div class="facility-icon mb-3">
+            <i class="bi bi-geo-alt"></i>
+          </div>
+          <h4 class="h6 mb-2">{{ t('rooms.facilities.location') }}</h4>
+          <p class="text-muted small">{{ t('rooms.facilities.location_desc') }}</p>
+        </div>
+      </div>
+      
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="facility-card text-center">
+          <div class="facility-icon mb-3">
+            <i class="bi bi-house"></i>
+          </div>
+          <h4 class="h6 mb-2">{{ t('rooms.facilities.space') }}</h4>
+          <p class="text-muted small">{{ t('rooms.facilities.space_desc') }}</p>
+        </div>
+      </div>
+      
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="facility-card text-center">
+          <div class="facility-icon mb-3">
+            <i class="bi bi-shield-check"></i>
+          </div>
+          <h4 class="h6 mb-2">{{ t('rooms.facilities.safety') }}</h4>
+          <p class="text-muted small">{{ t('rooms.facilities.safety_desc') }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- 推荐房源部分 -->
+<section class="section-block">
+  <div class="section-header">
+    <h2 class="section-header__title section-title text-center mb-5">{{ t('rooms.recommendations.title') }}</h2>
+  </div>
+  
+  <div class="rooms-grid">
+    {% for recommended_room in recommended_rooms %}
+      {% if recommended_room.id != room.id %}
+      <div class="room-teaser">
+        <div class="room-teaser__image">
+          <a href="{{ url_for('room_detail', room_id=recommended_room.id) }}" class="room-image-link">
+            <img src="{{ media_url(recommended_room.image) }}" alt="{{ localize(recommended_room, 'name') }}">
+          </a>
+        </div>
+        <div class="room-teaser__body">
+          <h2 class="h4 title-serif">{{ localize(recommended_room, 'name') }}</h2>
+          <div class="room-teaser__desc room-description">{{ localize(recommended_room, 'description') }}</div>
+          <div class="room-teaser__actions">
+            <a href="{{ url_for('room_detail', room_id=recommended_room.id) }}" class="btn-ink btn-sm">{{ t('rooms.button.details') }}</a>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+
+
+
+  
+  <div class="rooms-more">
+    <a href="{{ url_for('rooms') }}" class="btn-transparent">{{ t('rooms.list.view_all') }}</a>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const stickyHeader = document.getElementById('roomStickyHeader');
+    const originalBookButton = document.getElementById('originalBookButton');
+    
+    if (!stickyHeader || !originalBookButton) return;
+    
+    // 获取原始预订按钮的位置
+    function getOriginalButtonPosition() {
+        const rect = originalBookButton.getBoundingClientRect();
+        return rect.top + window.pageYOffset;
+    }
+    
+    // 滚动事件监听
+    function handleScroll() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const buttonPosition = getOriginalButtonPosition();
+        
+        // 当滚动超过原始按钮位置时显示固定栏
+        if (scrollTop > buttonPosition) {
+            stickyHeader.classList.add('show');
+        } else {
+            stickyHeader.classList.remove('show');
+        }
+    }
+    
+    // 节流函数，优化性能
+    function throttle(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+    
+    // 使用节流的滚动事件
+    const throttledScroll = throttle(handleScroll, 16); // 约60fps
+    
+    window.addEventListener('scroll', throttledScroll);
+    
+    // 页面加载时检查一次
+    handleScroll();
+    
+    // 窗口大小改变时重新计算
+    window.addEventListener('resize', throttle(handleScroll, 100));
+});
+</script>
+
+{% endblock %}

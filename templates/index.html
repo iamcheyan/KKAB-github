@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+{% block body_class %}home-page{% endblock %}
+{% block title %}Kakuka Anbo Co., Ltd.{% endblock %}
+{% block meta_description %}京都传统民宿，提供舒适的和式住宿体验。位于京都中心，交通便利，是体验日本传统文化的理想选择。{% endblock %}
+{% block meta_keywords %}京都民宿,和式住宿,日本传统文化,京都旅游,民宿预订,Airbnb京都,京都中心,传统建筑{% endblock %}
+{% block og_title %}京都传统民宿 - Kakuka Anbo Co., Ltd.{% endblock %}
+{% block og_description %}体验真正的京都传统生活，我们提供舒适的和式住宿，让您感受日本文化的魅力。{% endblock %}
+
+<!-- 结构化数据 -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LodgingBusiness",
+  "name": "Kakuka Anbo Co., Ltd.",
+  "description": "京都传统民宿，提供舒适的和式住宿体验",
+  "url": "{{ request.url_root }}",
+  "logo": "{{ url_for('static', filename='img/logo.png', _external=True) }}",
+  "image": "{{ url_for('static', filename='img/banner.png', _external=True) }}",
+  "telephone": "+81-75-XXX-XXXX",
+  "email": "info@kakuka-anbo.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "京都府京都市",
+    "addressLocality": "京都",
+    "addressCountry": "JP"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "35.0116",
+    "longitude": "135.7681"
+  },
+  "amenityFeature": [
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "WiFi",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification", 
+      "name": "Air Conditioning",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Kitchen",
+      "value": true
+    }
+  ],
+  "starRating": {
+    "@type": "Rating",
+    "ratingValue": "4.5",
+    "bestRating": "5"
+  },
+  "priceRange": "$$",
+  "currenciesAccepted": "JPY",
+  "paymentAccepted": "Cash, Credit Card",
+  "checkinTime": "15:00",
+  "checkoutTime": "11:00"
+}
+</script>
+
+{% block content %}
+<section class="hero-bleed">
+  <div class="hero-bleed__content">
+    <div class="row g-5 align-items-start">
+      <div class="col-12 col-lg-7">
+        <span class="hero-kicker animate-fade-in animate-delay-1">{{ t('hero.kicker') }}</span>
+        <h1 class="hero-title animate-fade-in-up animate-delay-2">{{ t('hero.title')|replace('\n','<br>')|safe }}</h1>
+        <p class="hero-subtext animate-fade-in-up animate-delay-3">{{ t('hero.subtitle') }}</p>
+        <div class="hero-badge mt-4 animate-fade-in-up animate-delay-4">
+          <i class="bi bi-flower1"></i>
+          {{ t('hero.badge') }}
+        </div>
+      </div>
+      <div class="col-12 col-lg-5">
+        <div class="hero-sidecard animate-slide-in-right animate-delay-3">
+          <h2 class="h5 mb-0 title-serif">{{ t('stay.title') }}</h2>
+          <ul>
+            <li>{{ t('hero.point1') }}</li>
+            <li>{{ t('hero.point2') }}</li>
+            <li>{{ t('hero.point3') }}</li>
+          </ul>
+          <div class="d-flex flex-column gap-1">
+            <span class="small text-muted">{{ t('hero.info.hours') }}</span>
+            <span class="small text-muted">{{ t('hero.info.station') }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-block">
+  <div class="section-header">
+    <span class="section-header__kicker">{{ t('stay.kicker') }}</span>
+    <h2 class="section-header__title">{{ t('stay.title') }}</h2>
+    <p class="section-header__lead">{{ t('stay.subtitle') }}</p>
+  </div>
+  <div class="stay-grid">
+    <div class="stay-card">
+      <span class="stay-card__tag">TEA &amp; MORNING</span>
+      <h3 class="stay-card__title">{{ t('stay.morning.title') }}</h3>
+      <p class="stay-card__body">{{ t('stay.morning.body') }}</p>
+    </div>
+    <div class="stay-card">
+      <span class="stay-card__tag">EXPERIENCE</span>
+      <h3 class="stay-card__title">{{ t('stay.experience.title') }}</h3>
+      <p class="stay-card__body">{{ t('stay.experience.body') }}</p>
+    </div>
+    <div class="stay-card">
+      <span class="stay-card__tag">MINPAKU OPS</span>
+      <h3 class="stay-card__title">{{ t('management.hero.title') }}</h3>
+      <p class="stay-card__body">{{ t('management.hero.lead') }}</p>
+      <div><a class="btn-outline-ink btn-sm" href="{{ url_for('management') }}">{{ t('management.cta_consult') }}</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-block">
+  <div class="section-header">
+    <span class="section-header__kicker">{{ t('rooms.kicker') }}</span>
+    <h2 class="section-header__title">{{ t('rooms.title') }}</h2>
+    <p class="section-header__lead">{{ t('rooms.subtitle') }}</p>
+  </div>
+  <div class="rooms-grid">
+    {% for room in rooms %}
+      <div class="room-teaser">
+        <a href="{{ url_for('room_detail', room_id=room.id) }}" class="room-teaser__image" aria-label="{{ localize(room, 'name') }}">
+          <img src="{{ media_url(room.image) }}" alt="{{ localize(room, 'name') }}">
+        </a>
+        <div class="room-teaser__body">
+          <h3 class="h4 title-serif">
+            <a href="{{ url_for('room_detail', room_id=room.id) }}" class="room-teaser__title-link">{{ localize(room, 'name') }}</a>
+          </h3>
+          <div class="room-teaser__desc room-description">
+            <a href="{{ url_for('room_detail', room_id=room.id) }}" class="room-teaser__desc-link">{{ localize(room, 'description') }}</a>
+          </div>
+          <div class="room-teaser__actions">
+            <a href="{{ url_for('room_detail', room_id=room.id) }}" class="btn-ink btn-sm">{{ t('rooms.button.details') }}</a>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="alert alert-info">{{ t('rooms.alert.empty') }}</div>
+    {% endfor %}
+  </div>
+  <div class="rooms-more">
+    <a href="{{ url_for('rooms') }}" class="btn-transparent">{{ t('rooms.list.view_all') }}</a>
+  </div>
+</section>
+
+<section class="section-block">
+  <div class="section-header">
+    <span class="section-header__kicker">{{ t('essence.kicker') }}</span>
+    <h2 class="section-header__title">{{ t('essence.title') }}</h2>
+  </div>
+  <div class="artisan-block">
+    <div class="artisan-panel">
+      <h3 class="h5 title-serif">{{ t('essence.lighting.title') }}</h3>
+      <p>{{ t('essence.lighting.body') }}</p>
+    </div>
+    <div class="artisan-panel">
+      <h3 class="h5 title-serif">{{ t('essence.sweets.title') }}</h3>
+      <p>{{ t('essence.sweets.body') }}</p>
+    </div>
+    <div class="artisan-panel">
+      <h3 class="h5 title-serif">{{ t('essence.concierge.title') }}</h3>
+      <p>{{ t('essence.concierge.body') }}</p>
+    </div>
+  </div>
+</section>
+
+{% if news_items %}
+<section class="section-block">
+  <div class="section-header">
+    <span class="section-header__kicker">{{ t('news.section.title') }}</span>
+    <h2 class="section-header__title">{{ t('news.section.title') }}</h2>
+  </div>
+  <div class="list-group shadow-sm">
+    {% for item in news_items %}
+      <div class="list-group-item">
+        <h3 class="h5 title-serif">{{ localize(item, 'title') }}</h3>
+        <div class="text-muted small">{{ item.published_at.strftime('%Y-%m-%d') }}</div>
+        <p class="mb-2">{{ localize(item, 'body') }}</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="callout mt-5">
+  <h2 class="section-header__title text-white mb-2">{{ t('callout.title') }}</h2>
+  <p class="text-white-70">{{ t('callout.body') }}</p>
+  <div class="d-flex flex-wrap gap-3">
+    <a href="{{ url_for('contact') }}" class="btn-outline-ink">{{ t('callout.cta_contact') }}</a>
+  </div>
+</section>
+{% endblock %}

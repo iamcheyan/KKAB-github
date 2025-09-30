@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}ご予約ありがとうございます - Kakuka Anbo Co., Ltd.{% endblock %}
+{% block content %}
+<div class="text-center py-5">
+  <div class="mb-4">
+    <span class="display-4" style="color: var(--accent);">◯</span>
+  </div>
+  <h1 class="h4 mb-3 title-serif">ご予約を承りました</h1>
+  <p class="text-muted">Kakuka Anbo Co., Ltd. にお問い合わせいただきありがとうございます。空室状況を確認のうえ、コンシェルジュより折り返しご連絡いたします。</p>
+  <div class="reservation-summary mt-4">
+    <h2 class="mb-3 title-serif">ご予約内容</h2>
+    <p><strong>客室：</strong>{{ booking.room.name }}</p>
+    <p><strong>チェックイン：</strong>{{ booking.check_in }}</p>
+    <p><strong>チェックアウト：</strong>{{ booking.check_out }}</p>
+    <p><strong>ご利用人数：</strong>{{ booking.guests }} 名様</p>
+    <p><strong>ステータス：</strong>{{ booking_status(booking.status) }}</p>
+  </div>
+  <a href="{{ url_for('index') }}" class="btn-outline-ink mt-4">トップへ戻る</a>
+</div>
+{% endblock %}

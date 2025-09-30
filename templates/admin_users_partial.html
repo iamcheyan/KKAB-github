@@ -1,0 +1,113 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0 title-serif">ユーザー管理</h1>
+  <a href="{{ url_for('admin_dashboard') }}" class="btn-outline-ink">ダッシュボード</a>
+</div>
+
+<div class="row g-4">
+  <div class="col-12 col-lg-6">
+    <div class="form-frame">
+      <h2 class="h5 mb-3 title-serif">ユーザー追加</h2>
+      <form method="post" action="{{ url_for('admin_users') }}">
+        {{ add_user_form.hidden_tag() }}
+        <div class="mb-3">
+          <label class="form-label">{{ add_user_form.username.label }}</label>
+          {{ add_user_form.username(class_='form-control') }}
+          {% for error in add_user_form.username.errors %}
+            <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+        <div class="mb-3">
+          <label class="form-label">{{ add_user_form.password.label }}</label>
+          {{ add_user_form.password(class_='form-control') }}
+          {% for error in add_user_form.password.errors %}
+            <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+        <div class="mb-3">
+          {{ add_user_form.submit(class_='btn-ink') }}
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6">
+    <div class="form-frame">
+      <h2 class="h5 mb-3 title-serif">パスワード変更</h2>
+      <form method="post" action="{{ url_for('admin_users') }}">
+        {{ change_password_form.hidden_tag() }}
+        <div class="mb-3">
+          <label class="form-label">{{ change_password_form.username.label }}</label>
+          {{ change_password_form.username(class_='form-control') }}
+          {% for error in change_password_form.username.errors %}
+            <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+        <div class="mb-3">
+          <label class="form-label">{{ change_password_form.new_password.label }}</label>
+          {{ change_password_form.new_password(class_='form-control') }}
+          {% for error in change_password_form.new_password.errors %}
+            <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+        <div class="mb-3">
+          {{ change_password_form.submit(class_='btn-ink') }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="mt-5">
+  <h2 class="h5 mb-3 title-serif">現在のユーザー一覧</h2>
+  <div class="table-responsive admin-table">
+    <table class="table table-striped align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>ユーザー名</th>
+          <th>パスワード</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr>
+            <td>{{ user.username }}</td>
+            <td><code class="text-muted">{{ user.password }}</code></td>
+            <td>
+              <button class="btn btn-sm btn-outline-danger" onclick="deleteUser('{{ user.username }}')">削除</button>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="3" class="text-center py-4">ユーザーがありません</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+function deleteUser(username) {
+  if (confirm('ユーザー "' + username + '" を削除してもよろしいですか？')) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '{{ url_for("admin_delete_user") }}';
+
+    const csrfToken = document.createElement('input');
+    csrfToken.type = 'hidden';
+    csrfToken.name = 'csrf_token';
+    csrfToken.value = '{{ csrf_token() }}';
+
+    const usernameInput = document.createElement('input');
+    usernameInput.type = 'hidden';
+    usernameInput.name = 'username';
+    usernameInput.value = username;
+
+    form.appendChild(csrfToken);
+    form.appendChild(usernameInput);
+    document.body.appendChild(form);
+    form.submit();
+  }
+}
+</script>

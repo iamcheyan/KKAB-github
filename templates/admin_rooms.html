@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}客室管理 - Kakuka Anbo Co., Ltd.{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0 title-serif">客室管理</h1>
+  <div class="d-flex gap-2">
+    <a href="{{ url_for('admin_dashboard') }}" class="btn-outline-ink">ダッシュボード</a>
+    <a href="{{ url_for('admin_room_create') }}" class="btn-ink">新規作成</a>
+  </div>
+</div>
+<div class="table-responsive admin-table">
+  <table class="table table-striped align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>ID</th>
+        <th>日本語</th>
+        <th>English</th>
+        <th>中文</th>
+        <th>住所</th>
+        <th>許可番号</th>
+        <th>Airbnb</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for room in rooms %}
+        <tr>
+          <td>{{ room.id }}</td>
+          <td>
+            <div class="fw-semibold">{{ room.name_ja }}</div>
+            <div class="text-muted small">{{ room.status }}</div>
+          </td>
+          <td>{{ room.name_en }}</td>
+          <td>{{ room.name_zh }}</td>
+          <td>{{ room.address_ja or '-' }}</td>
+          <td>{{ room.permit_number or '-' }}</td>
+          <td class="small"><a href="{{ room.airbnb_url }}" target="_blank" rel="noopener">Airbnb</a></td>
+          <td>
+            <div class="d-flex flex-wrap gap-2">
+              <a href="{{ url_for('admin_room_edit', room_id=room.id) }}" class="btn btn-sm btn-outline-secondary">編集</a>
+              <form method="post" action="{{ url_for('admin_room_delete', room_id=room.id) }}" onsubmit="return confirm('削除してもよろしいですか？');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-sm btn-outline-danger">削除</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="8" class="text-center py-4">登録された客室はありません。</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
