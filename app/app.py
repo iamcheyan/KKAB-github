@@ -17,19 +17,66 @@ from werkzeug.datastructures import FileStorage
 from wtforms.validators import DataRequired
 from urllib.parse import urljoin, urlparse
 
-from forms import (
-    BookingForm,
-    ContactContentForm,
-    ContactForm,
-    LoginForm,
-    NewsForm,
-    HomeContentForm,
-    RoomAdminForm,
-    UserManagementForm,
-    ChangePasswordForm,
-)
-from json_models import Room, Booking, Message, Admin, News, SiteContent, room_model, booking_model, message_model, news_model, site_content_model, data_manager
-from translations import DEFAULT_LANGUAGE, LANGUAGES, TRANSLATIONS
+try:
+    from .forms import (
+        BookingForm,
+        ContactContentForm,
+        ContactForm,
+        LoginForm,
+        NewsForm,
+        HomeContentForm,
+        RoomAdminForm,
+        UserManagementForm,
+        ChangePasswordForm,
+    )
+    from .json_models import (
+        Room,
+        Booking,
+        Message,
+        Admin,
+        News,
+        SiteContent,
+        room_model,
+        booking_model,
+        message_model,
+        news_model,
+        site_content_model,
+        data_manager,
+    )
+    from .translations import DEFAULT_LANGUAGE, LANGUAGES, TRANSLATIONS
+except ImportError:
+    # 允许以 "python app/app.py" 直接执行
+    import sys as _sys
+    import os as _os
+    _parent = _os.path.dirname(_os.path.dirname(__file__))
+    if _parent not in _sys.path:
+        _sys.path.insert(0, _parent)
+    from app.forms import (
+        BookingForm,
+        ContactContentForm,
+        ContactForm,
+        LoginForm,
+        NewsForm,
+        HomeContentForm,
+        RoomAdminForm,
+        UserManagementForm,
+        ChangePasswordForm,
+    )
+    from app.json_models import (
+        Room,
+        Booking,
+        Message,
+        Admin,
+        News,
+        SiteContent,
+        room_model,
+        booking_model,
+        message_model,
+        news_model,
+        site_content_model,
+        data_manager,
+    )
+    from app.translations import DEFAULT_LANGUAGE, LANGUAGES, TRANSLATIONS
 
 
 csrf = CSRFProtect()
@@ -54,7 +101,7 @@ def create_app() -> Flask:
     # ユーザー管理JSONファイル操作関数
     def load_users():
         import json
-        users_file_path = 'users.json'
+        users_file_path = os.path.join(os.path.dirname(__file__), 'users.json')
         if os.path.exists(users_file_path):
             with open(users_file_path, 'r', encoding='utf-8') as f:
                 return json.load(f)
@@ -62,7 +109,7 @@ def create_app() -> Flask:
 
     def save_users(users):
         import json
-        users_file_path = 'users.json'
+        users_file_path = os.path.join(os.path.dirname(__file__), 'users.json')
         with open(users_file_path, 'w', encoding='utf-8') as f:
             json.dump(users, f, ensure_ascii=False, indent=2)
 
@@ -147,9 +194,62 @@ def create_app() -> Flask:
         test_url = urlparse(urljoin(request.host_url, target))
         return test_url.scheme in {"http", "https"} and ref_url.netloc == test_url.netloc
 
+    def _generate_static_site() -> None:
+        """生成静态站点到项目根目录，静态资源前缀重写为 app/static/。
+
+        参考 veikin.com：为多语言与房间详情生成页面，便于 GitHub Pages 部署。
+        """
+        try:
+            project_root = os.path.dirname(os.path.dirname(__file__))
+            os.makedirs(project_root, exist_ok=True)
+
+            def _write_html(route: str, out_rel_path: str) -> None:
+                out_path = os.path.join(project_root, out_rel_path)
+                os.makedirs(os.path.dirname(out_path), exist_ok=True)
+                with app.test_client() as client:
+                    resp = client.get(route)
+                    if resp.status_code != 200:
+                        return
+                    html = resp.get_data(as_text=True)
+                    # 将 Flask 的 /static/ 路径重写为 GitHub Pages 的 app/static/
+                    html = html.replace('"/static/', '"app/static/').replace("'/static/", "'app/static/")
+                with open(out_path, 'w', encoding='utf-8') as f:
+                    f.write(html)
+
+            # 基础页面
+            _write_html('/', 'index.html')
+            _write_html('/rooms', 'rooms.html')
+            _write_html('/contact', 'contact.html')
+            _write_html('/management', 'management.html')
+
+            # 多语言首页/页面
+            for lang in LANGUAGES:
+                _write_html(f'/{lang}/', os.path.join(lang, 'index.html'))
+                _write_html(f'/{lang}/rooms', os.path.join(lang, 'rooms.html'))
+                _write_html(f'/{lang}/contact', os.path.join(lang, 'contact.html'))
+                _write_html(f'/{lang}/management', os.path.join(lang, 'management.html'))
+
+            # 房间详情页面（含多语言）
+            try:
+                rooms = room_model.get_all()
+            except Exception:
+                rooms = []
+            for room in rooms:
+                rid = room.get('id')
+                if not rid:
+                    continue
+                _write_html(f'/rooms/{rid}', os.path.join('rooms', f'{rid}.html'))
+                for lang in LANGUAGES:
+                    _write_html(f'/{lang}/rooms/{rid}', os.path.join(lang, 'rooms', f'{rid}.html'))
+
+            print("[static] 静态页已生成到项目根目录（静态资源前缀 app/static/）")
+        except Exception as e:
+            # 生成失败不影响运行
+            print(f"[static] 生成静态页失败: {e}")
+
     # 确保JSON数据目录存在
     with app.app_context():
-        data_dir = "data"
+        data_dir = data_manager.data_dir
         if not os.path.exists(data_dir):
             print(f"创建数据目录: {data_dir}")
             os.makedirs(data_dir, exist_ok=True)
@@ -1087,7 +1187,7 @@ def create_app() -> Flask:
 
         try:
             # 检查数据目录是否存在
-            data_dir = "data"
+            data_dir = data_manager.data_dir
             
             if not os.path.exists(data_dir):
                 message = "データディレクトリが存在しません"
@@ -1097,7 +1197,7 @@ def create_app() -> Flask:
                 return redirect(url_for("admin_dashboard"))
             
             # 创建备份目录
-            backup_dir = "backups"
+            backup_dir = os.path.join(os.path.dirname(__file__), "backups")
             os.makedirs(backup_dir, exist_ok=True)
             
             # 生成备份文件名（包含时间戳）
@@ -1120,10 +1220,11 @@ def create_app() -> Flask:
                         tar.add(file_path, arcname=json_file)
                 
                 # 添加用户文件和主页内容
-                if os.path.exists("users.json"):
-                    tar.add("users.json", arcname="users.json")
+                users_json_path = os.path.join(os.path.dirname(__file__), "users.json")
+                if os.path.exists(users_json_path):
+                    tar.add(users_json_path, arcname="users.json")
                 
-                home_content_path = os.path.join("static", "data", "home_content.json")
+                home_content_path = os.path.join(app.static_folder, "data", "home_content.json")
                 if os.path.exists(home_content_path):
                     tar.add(home_content_path, arcname="home_content.json")
             
@@ -1162,7 +1263,7 @@ def create_app() -> Flask:
     def download_backup(filename):
         """下载指定的备份文件"""
         try:
-            backup_dir = "backups"
+            backup_dir = os.path.join(os.path.dirname(__file__), "backups")
             file_path = os.path.join(backup_dir, filename)
             
             # 安全检查：确保文件在备份目录内
@@ -1182,7 +1283,7 @@ def create_app() -> Flask:
     def list_backups():
         """获取备份文件列表"""
         try:
-            backup_dir = "backups"
+            backup_dir = os.path.join(os.path.dirname(__file__), "backups")
             if not os.path.exists(backup_dir):
                 return jsonify(backups=[])
             
@@ -1255,13 +1356,19 @@ def create_app() -> Flask:
     def tencent_verification():
         """提供腾讯验证文件"""
         try:
-            file_path = "tencent9183081876022215902.txt"
+            file_path = os.path.join(os.path.dirname(__file__), "tencent9183081876022215902.txt")
             if os.path.exists(file_path):
                 return send_file(file_path, mimetype='text/plain')
             else:
                 return "文件不存在", 404
         except Exception as e:
             return f"文件读取错误: {str(e)}", 500
+
+    # 应用创建完成后生成一次静态页（适用于 flask run / 直接运行）
+    try:
+        _generate_static_site()
+    except Exception:
+        pass
 
     return app
 

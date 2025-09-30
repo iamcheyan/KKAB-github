@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>民泊の運営代行をワンストップで - Kakuka Anbo Co., Ltd.</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="京都传统民宿，提供舒适的和式住宿体验。位于京都中心，交通便利，是体验日本传统文化的理想选择。">
+    <meta name="keywords" content="京都民宿,和式住宿,日本传统文化,京都旅游,民宿预订,Airbnb京都">
+    <meta name="author" content="Kakuka Anbo Co., Ltd.">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="ja">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://localhost/management">
+    <meta property="og:title" content="民泊の運営代行をワンストップで - Kakuka Anbo Co., Ltd.">
+    <meta property="og:description" content="京都传统民宿，提供舒适的和式住宿体验。位于京都中心，交通便利，是体验日本传统文化的理想选择。">
+    <meta property="og:image" content="http://localhost/static/img/logo.png">
+    <meta property="og:site_name" content="Kakuka Anbo Co., Ltd.">
+    <meta property="og:locale" content="ja_JP">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="http://localhost/management">
+    <meta property="twitter:title" content="民泊の運営代行をワンストップで - Kakuka Anbo Co., Ltd.">
+    <meta property="twitter:description" content="京都传统民宿，提供舒适的和式住宿体验。位于京都中心，交通便利，是体验日本传统文化的理想选择。">
+    <meta property="twitter:image" content="http://localhost/static/img/logo.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="app/static/img/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="app/static/img/favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="app/static/img/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="app/static/css/style.css">
+  </head>
+  <body class="kyoto-body d-flex flex-column min-vh-100 ">
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light navbar-kyoto sticky-top shadow-sm">
+        <div class="container-xxl">
+          <a class="navbar-brand" href="/">
+            <img src="app/static/img/logo.png" alt="Kakuka Anbo Co., Ltd." class="logo-img">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item"><a class="nav-link" href="/">ホーム</a></li>
+              <li class="nav-item"><a class="nav-link" href="/rooms">客室</a></li>
+              <li class="nav-item"><a class="nav-link" href="/management">運営代行</a></li>
+              
+              <li class="nav-item"><a class="nav-link" href="/contact">お問い合わせ</a></li>
+              <li class="nav-item"><a class="nav-link" href="/admin/login">管理</a></li>
+              
+              <li class="nav-item">
+                <div class="d-flex align-items-center gap-1">
+                  
+                    <a class="nav-link p-1 active" 
+                       href="/lang/ja?next=/management?"
+                       title="日本語">
+                      <img src="app/static/img/flags/ja.svg" 
+                           alt="日本語" 
+                           class="flag-icon flag-clickable">
+                    </a>
+                  
+                    <a class="nav-link p-1 " 
+                       href="/lang/en?next=/management?"
+                       title="英語">
+                      <img src="app/static/img/flags/en.svg" 
+                           alt="英語" 
+                           class="flag-icon flag-clickable">
+                    </a>
+                  
+                    <a class="nav-link p-1 " 
+                       href="/lang/zh?next=/management?"
+                       title="中国語">
+                      <img src="app/static/img/flags/zh.svg" 
+                           alt="中国語" 
+                           class="flag-icon flag-clickable">
+                    </a>
+                  
+                </div>
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="kyoto-main flex-grow-1">
+      <div class="container-kyoto">
+        
+          
+        
+        
+
+<!-- 固定顶部栏 -->
+<div class="management-sticky-header" id="managementStickyHeader">
+  <div class="management-sticky-content">
+    <h1 class="management-sticky-title">民泊の運営代行をワンストップで</h1>
+    <div class="management-sticky-actions">
+      <a href="/contact" class="management-sticky-btn primary">
+        <i class="bi bi-chat-dots me-2"></i>無料で相談する
+      </a>
+      <a href="/rooms" class="management-sticky-btn secondary">
+        <i class="bi bi-house me-2"></i>宿泊施設を見る
+      </a>
+    </div>
+  </div>
+</div>
+
+<section class="hero-frame">
+  <div class="hero-frame__content">
+    <div class="d-grid gap-3">
+      <span class="hero-kicker">MINPAKU OPS</span>
+      <h1 class="hero-title">民泊の運営代行をワンストップで</h1>
+      <p class="hero-subtext">Airbnb運用・無人運営体制・清掃管理まで、収益最大化を支援します。</p>
+      <div><a href="/contact" class="btn-ink" id="originalConsultButton">無料で相談する</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-block">
+  <div class="container">
+    <h2 class="section-title">民泊運営代行サービス</h2>
+    <p class="section-lead">物件選定からオペレーション、集客までワンストップでサポートします。</p>
+    <div class="d-grid gap-2">
+      <p class="muted">地域特性と法令を踏まえた物件診断、収益シミュレーション、無人運営のノウハウを組み合わせ、オーナー様の手間を最大限削減します。</p>
+    </div>
+  </div>
+</section>
+
+<section class="section-block">
+  <div class="stay-grid">
+    <div class="stay-card">
+      <h3 class="stay-card__title">01. 手間ゼロの安心運営</h3>
+      <p class="stay-card__body">開業準備から法令対応・ゲスト対応まで代行。初めてでも安心です。</p>
+      <p class="stay-card__detail">法令確認・許認可の支援、現地調査や消防設備の設置手配など、開業に必要な手続きを一括で代行します。</p>
+    </div>
+    <div class="stay-card">
+      <h3 class="stay-card__title">02. インバウンドに強い集客</h3>
+      <p class="stay-card__body">Airbnb/Booking.com の運用最適化で客室販売を強化。</p>
+      <p class="stay-card__detail">競合分析や価格戦略で稼働率とADRを改善し、最大収益を目指します。</p>
+    </div>
+    <div class="stay-card">
+      <h3 class="stay-card__title">03. 清掃品質とレビュー改善</h3>
+      <p class="stay-card__body">チェックリスト運用で品質を担保。高評価レビューを獲得。</p>
+      <p class="stay-card__detail">地域密着の清掃チームと写真管理による品質担保、ゲスト満足度向上を目指します。</p>
+    </div>
+  </div>
+</section>
+
+<section class="section-block">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-header__kicker">SERVICE</span>
+      <h2 class="section-header__title">提供サービス</h2>
+      <p class="section-header__lead">開業前〜運営中まで、段階ごとに必要なサービスを用意しています。</p>
+    </div>
+
+    <div class="service-grid d-grid gap-2">
+      <div class="service-item">
+        <h4>事業計画</h4>
+        <p class="muted">市場・収支の分析を行い現実的な計画を策定します。</p>
+      </div>
+      <div class="service-item">
+        <h4>エリア・市場分析</h4>
+        <p class="muted">周辺需要や条例を踏まえて物件のポテンシャルを診断します。</p>
+      </div>
+      <div class="service-item">
+        <h4>初期費用算出</h4>
+        <p class="muted">許認可・改修・設備費等の見積りを提示します。</p>
+      </div>
+      <div class="service-item">
+        <h4>収支シミュレーション</h4>
+        <p class="muted">開業後の年間収支予測を提示します。</p>
+      </div>
+      <div class="service-item">
+        <h4>物件コンセプト立案</h4>
+        <p class="muted">ターゲットに合わせた内装・運営コンセプトを策定します。</p>
+      </div>
+      <div class="service-item">
+        <h4>オペレーション構築</h4>
+        <p class="muted">チェックイン・清掃・備品管理の仕組みを整えます。</p>
+      </div>
+      <div class="service-item">
+        <h4>清掃管理</h4>
+        <p class="muted">地域のプロ業者と協力し品質を維持します。</p>
+      </div>
+      <div class="service-item">
+        <h4>OTA運用・集客</h4>
+        <p class="muted">各OTA最適化と価格戦略で集客力を高めます。</p>
+      </div>
+    </div>
+
+    <div class="d-flex mt-3">
+      <a href="/contact" class="btn-ink">無料で相談する</a>
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const stickyHeader = document.getElementById('managementStickyHeader');
+    const originalConsultButton = document.getElementById('originalConsultButton');
+    
+    if (!stickyHeader || !originalConsultButton) return;
+    
+    // 获取原始咨询按钮的位置
+    function getOriginalButtonPosition() {
+        const rect = originalConsultButton.getBoundingClientRect();
+        return rect.top + window.pageYOffset;
+    }
+    
+    // 滚动事件监听
+    function handleScroll() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const buttonPosition = getOriginalButtonPosition();
+        
+        // 当滚动超过原始按钮位置时显示固定栏
+        if (scrollTop > buttonPosition) {
+            stickyHeader.classList.add('show');
+        } else {
+            stickyHeader.classList.remove('show');
+        }
+    }
+    
+    // 节流函数，优化性能
+    function throttle(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+    
+    // 使用节流的滚动事件
+    const throttledScroll = throttle(handleScroll, 16); // 约60fps
+    
+    window.addEventListener('scroll', throttledScroll);
+    
+    // 页面加载时检查一次
+    handleScroll();
+    
+    // 窗口大小改变时重新计算
+    window.addEventListener('resize', throttle(handleScroll, 100));
+});
+</script>
+
+
+      </div>
+    </main>
+
+    <footer class="kyoto-footer mt-auto">
+      <div class="container-kyoto text-center d-grid gap-2">
+        <p>© 2025 Kakuka Anbo Co., Ltd.</p>
+        <p class="small">京都の静かな路地で、ゆったりとしたひとときを。</p>
+      </div>
+    </footer>
+
+    <!-- 回到顶部按钮 -->
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">
+      <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq6O9gBi" crossorigin="anonymous"></script>
+    <script src="app/static/js/script.js"></script>
+  </body>
+</html>

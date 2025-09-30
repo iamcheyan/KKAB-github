@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>お問い合わせ - Kakuka Anbo Co., Ltd.</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="京都传统民宿，提供舒适的和式住宿体验。位于京都中心，交通便利，是体验日本传统文化的理想选择。">
+    <meta name="keywords" content="京都民宿,和式住宿,日本传统文化,京都旅游,民宿预订,Airbnb京都">
+    <meta name="author" content="Kakuka Anbo Co., Ltd.">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="ja">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://localhost/contact">
+    <meta property="og:title" content="お問い合わせ - Kakuka Anbo Co., Ltd.">
+    <meta property="og:description" content="京都传统民宿，提供舒适的和式住宿体验。位于京都中心，交通便利，是体验日本传统文化的理想选择。">
+    <meta property="og:image" content="http://localhost/static/img/logo.png">
+    <meta property="og:site_name" content="Kakuka Anbo Co., Ltd.">
+    <meta property="og:locale" content="ja_JP">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="http://localhost/contact">
+    <meta property="twitter:title" content="お問い合わせ - Kakuka Anbo Co., Ltd.">
+    <meta property="twitter:description" content="京都传统民宿，提供舒适的和式住宿体验。位于京都中心，交通便利，是体验日本传统文化的理想选择。">
+    <meta property="twitter:image" content="http://localhost/static/img/logo.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="app/static/img/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="app/static/img/favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="app/static/img/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="app/static/css/style.css">
+  </head>
+  <body class="kyoto-body d-flex flex-column min-vh-100 ">
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light navbar-kyoto sticky-top shadow-sm">
+        <div class="container-xxl">
+          <a class="navbar-brand" href="/">
+            <img src="app/static/img/logo.png" alt="Kakuka Anbo Co., Ltd." class="logo-img">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item"><a class="nav-link" href="/">ホーム</a></li>
+              <li class="nav-item"><a class="nav-link" href="/rooms">客室</a></li>
+              <li class="nav-item"><a class="nav-link" href="/management">運営代行</a></li>
+              
+              <li class="nav-item"><a class="nav-link" href="/contact">お問い合わせ</a></li>
+              <li class="nav-item"><a class="nav-link" href="/admin/login">管理</a></li>
+              
+              <li class="nav-item">
+                <div class="d-flex align-items-center gap-1">
+                  
+                    <a class="nav-link p-1 active" 
+                       href="/lang/ja?next=/contact?"
+                       title="日本語">
+                      <img src="app/static/img/flags/ja.svg" 
+                           alt="日本語" 
+                           class="flag-icon flag-clickable">
+                    </a>
+                  
+                    <a class="nav-link p-1 " 
+                       href="/lang/en?next=/contact?"
+                       title="英語">
+                      <img src="app/static/img/flags/en.svg" 
+                           alt="英語" 
+                           class="flag-icon flag-clickable">
+                    </a>
+                  
+                    <a class="nav-link p-1 " 
+                       href="/lang/zh?next=/contact?"
+                       title="中国語">
+                      <img src="app/static/img/flags/zh.svg" 
+                           alt="中国語" 
+                           class="flag-icon flag-clickable">
+                    </a>
+                  
+                </div>
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="kyoto-main flex-grow-1">
+      <div class="container-kyoto">
+        
+          
+        
+        
+<div class="row g-5 align-items-start">
+  <div class="col-12 col-lg-6">
+    <div class="form-frame">
+      <h1 class="h3 mb-3 title-serif">お問い合わせ</h1>
+      <p class="text-muted">滞在プランのカスタマイズ、特別な体験の手配など、お気軽にお知らせください。24時間以内にコンシェルジュよりご連絡いたします。</p>
+      <form method="post" novalidate>
+        <input id="csrf_token" name="csrf_token" type="hidden" value="ImRmZTI1MmM1NTAxYmIxMDYxMDhlZGVmOTViYjE4MmMwODljM2E0YTki.aNwCkA.Bi3vsHXzc5qiDLgR7koW3vGgJW4">
+        <div class="mb-3">
+          <label class="form-label">お名前</label>
+          <input class="form-control" id="name" maxlength="80" name="name" placeholder="お名前" required type="text" value="">
+          
+        </div>
+        <div class="mb-3">
+          <label class="form-label">メールアドレス</label>
+          <input class="form-control" id="email" maxlength="120" name="email" placeholder="メールアドレス" required type="text" value="">
+          
+        </div>
+        <div class="mb-3">
+          <label class="form-label">お問い合わせ内容</label>
+          <textarea class="form-control" id="message" maxlength="1000" name="message" placeholder="お問い合わせ内容" required rows="5">
+</textarea>
+          
+        </div>
+        <input class="btn-ink" id="submit" name="submit" type="submit" value="送信する">
+      </form>
+    </div>
+  </div>
+  <div class="col-12 col-lg-6">
+    <div class="contact-side h-100">
+      
+      
+      <h2 class="h5 mb-3 title-serif">KKAB Co., Ltd. </h2>
+
+      
+        
+        
+          
+        
+        
+          
+        
+        
+          <p class="mb-2"><strong>電話</strong>：+81-070-9065-6923</p>
+        
+        
+          <p class="mb-4"><strong>メール</strong>：kaka.kyoto.biz@gmail.com</p>
+        
+
+       
+
+        
+          <div class="mt-4">
+            
+              <p>ご宿泊や体験に関するご相談はいつでもお気軽にお寄せください。</p>
+            
+          </div>
+        
+      
+
+      <div class="contact-qr-grid mt-4">
+        <div class="contact-qr-item">
+          <h3 class="contact-qr-title">WeChat QRコード</h3>
+          <img src="app/static/img/wx.jpg" alt="WeChat QRコード" class="contact-qr-image">
+        </div>
+        <div class="contact-qr-item">
+          <h3 class="contact-qr-title">LINE QRコード</h3>
+          <img src="app/static/img/line.jpg" alt="LINE QRコード" class="contact-qr-image">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+    </main>
+
+    <footer class="kyoto-footer mt-auto">
+      <div class="container-kyoto text-center d-grid gap-2">
+        <p>© 2025 Kakuka Anbo Co., Ltd.</p>
+        <p class="small">京都の静かな路地で、ゆったりとしたひとときを。</p>
+      </div>
+    </footer>
+
+    <!-- 回到顶部按钮 -->
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">
+      <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq6O9gBi" crossorigin="anonymous"></script>
+    <script src="app/static/js/script.js"></script>
+  </body>
+</html>

@@ -10,7 +10,11 @@ from flask_login import UserMixin
 class JSONDataManager:
     """Base class for managing JSON data files."""
     
-    def __init__(self, data_dir: str = "data"):
+    def __init__(self, data_dir: str = None):
+        # 数据目录默认指向包内的 data 目录，确保与新结构一致
+        if data_dir is None:
+            package_dir = os.path.dirname(__file__)
+            data_dir = os.path.join(package_dir, "data")
         self.data_dir = data_dir
         os.makedirs(data_dir, exist_ok=True)
     

@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kakuka Anbo Co., Ltd.</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="京都传统民宿，提供舒适的和式住宿体验。位于京都中心，交通便利，是体验日本传统文化的理想选择。">
+    <meta name="keywords" content="京都民宿,和式住宿,日本传统文化,京都旅游,民宿预订,Airbnb京都,京都中心,传统建筑">
+    <meta name="author" content="Kakuka Anbo Co., Ltd.">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="ja">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://localhost/ja/">
+    <meta property="og:title" content="京都传统民宿 - Kakuka Anbo Co., Ltd.">
+    <meta property="og:description" content="体验真正的京都传统生活，我们提供舒适的和式住宿，让您感受日本文化的魅力。">
+    <meta property="og:image" content="http://localhost/static/img/logo.png">
+    <meta property="og:site_name" content="Kakuka Anbo Co., Ltd.">
+    <meta property="og:locale" content="ja_JP">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="http://localhost/ja/">
+    <meta property="twitter:title" content="Kakuka Anbo Co., Ltd.">
+    <meta property="twitter:description" content="京都传统民宿，提供舒适的和式住宿体验。位于京都中心，交通便利，是体验日本传统文化的理想选择。">
+    <meta property="twitter:image" content="http://localhost/static/img/logo.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="app/static/img/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="app/static/img/favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="app/static/img/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="app/static/css/style.css">
+  </head>
+  <body class="kyoto-body d-flex flex-column min-vh-100 home-page">
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light navbar-kyoto sticky-top shadow-sm">
+        <div class="container-xxl">
+          <a class="navbar-brand" href="/">
+            <img src="app/static/img/logo.png" alt="Kakuka Anbo Co., Ltd." class="logo-img">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item"><a class="nav-link" href="/">ホーム</a></li>
+              <li class="nav-item"><a class="nav-link" href="/rooms">客室</a></li>
+              <li class="nav-item"><a class="nav-link" href="/management">運営代行</a></li>
+              
+              <li class="nav-item"><a class="nav-link" href="/contact">お問い合わせ</a></li>
+              <li class="nav-item"><a class="nav-link" href="/admin/login">管理</a></li>
+              
+              <li class="nav-item">
+                <div class="d-flex align-items-center gap-1">
+                  
+                    <a class="nav-link p-1 active" 
+                       href="/lang/ja?next=/ja/?"
+                       title="日本語">
+                      <img src="app/static/img/flags/ja.svg" 
+                           alt="日本語" 
+                           class="flag-icon flag-clickable">
+                    </a>
+                  
+                    <a class="nav-link p-1 " 
+                       href="/lang/en?next=/ja/?"
+                       title="英語">
+                      <img src="app/static/img/flags/en.svg" 
+                           alt="英語" 
+                           class="flag-icon flag-clickable">
+                    </a>
+                  
+                    <a class="nav-link p-1 " 
+                       href="/lang/zh?next=/ja/?"
+                       title="中国語">
+                      <img src="app/static/img/flags/zh.svg" 
+                           alt="中国語" 
+                           class="flag-icon flag-clickable">
+                    </a>
+                  
+                </div>
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="kyoto-main flex-grow-1">
+      <div class="container-kyoto">
+        
+          
+        
+        
+<section class="hero-bleed">
+  <div class="hero-bleed__content">
+    <div class="row g-5 align-items-start">
+      <div class="col-12 col-lg-7">
+        <span class="hero-kicker animate-fade-in animate-delay-1">KYOTO </span>
+        <h1 class="hero-title animate-fade-in-up animate-delay-2">京都の宿泊施設で、<br>静かに息を整える宿</h1>
+        <p class="hero-subtext animate-fade-in-up animate-delay-3">は京都各地に展開する多様な宿泊施設を提供しています。一棟貸しの町家から現代的なアパートまで、ご旅行スタイルに合わせてお選びいただけます。</p>
+        <div class="hero-badge mt-4 animate-fade-in-up animate-delay-4">
+          <i class="bi bi-flower1"></i>
+          多様な宿泊タイプをご用意
+        </div>
+      </div>
+      <div class="col-12 col-lg-5">
+        <div class="hero-sidecard animate-slide-in-right animate-delay-3">
+          <h2 class="h5 mb-0 title-serif">季節の息遣いと職人の手仕事を感じる滞在</h2>
+          <ul>
+            <li>一棟貸しからアパートまで多様な選択肢</li>
+            <li>京都駅近くから鴨川沿いまで好立地</li>
+            <li>一人旅から家族旅行まで対応</li>
+          </ul>
+          <div class="d-flex flex-column gap-1">
+            <span class="small text-muted">多様な宿泊タイプをご用意しています</span>
+            <span class="small text-muted">一戸建てタイプもあり、ご家族での滞在に最適です</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-block">
+  <div class="section-header">
+    <span class="section-header__kicker">STAY IN KYOTO</span>
+    <h2 class="section-header__title">季節の息遣いと職人の手仕事を感じる滞在</h2>
+    <p class="section-header__lead">春は桜の香、夏は川床の涼、秋は紅葉の光、冬は炭火の温度。五感で京都を味わう時間をご用意しております。</p>
+  </div>
+  <div class="stay-grid">
+    <div class="stay-card">
+      <span class="stay-card__tag">TEA &amp; MORNING</span>
+      <h3 class="stay-card__title">朝の茶会と季節の和朝食</h3>
+      <p class="stay-card__body">茶道講師と過ごす朝の点前体験と、京野菜・おばんざいを中心とした和朝食を、町家の土間にてご提供します。</p>
+    </div>
+    <div class="stay-card">
+      <span class="stay-card__tag">EXPERIENCE</span>
+      <h3 class="stay-card__title">町散策と非公開寺院の拝観</h3>
+      <p class="stay-card__body">宿専属のコンシェルジュが、路地散歩や庭園拝観、季節の行事など、旅のテーマに合わせてご案内いたします。</p>
+    </div>
+    <div class="stay-card">
+      <span class="stay-card__tag">MINPAKU OPS</span>
+      <h3 class="stay-card__title">民泊の運営代行をワンストップで</h3>
+      <p class="stay-card__body">Airbnb運用・無人運営体制・清掃管理まで、収益最大化を支援します。</p>
+      <div><a class="btn-outline-ink btn-sm" href="/management">無料で相談する</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-block">
+  <div class="section-header">
+    <span class="section-header__kicker">客室</span>
+    <h2 class="section-header__title">京都宿泊施設のご案内</h2>
+    <p class="section-header__lead">京都各地の多様な宿泊施設をご用意しています。一棟貸しの町家から現代的なアパートまで、お客様のニーズに合わせてお選びいただけます。</p>
+  </div>
+  <div class="rooms-grid">
+    
+      <div class="room-teaser">
+        <a href="/rooms/1" class="room-teaser__image" aria-label="京都駅南・西九条島町53-3">
+          <img src="app/static/img/rooms/room_1_3ce837d2.avif" alt="京都駅南・西九条島町53-3">
+        </a>
+        <div class="room-teaser__body">
+          <h3 class="h4 title-serif">
+            <a href="/rooms/1" class="room-teaser__title-link">京都駅南・西九条島町53-3</a>
+          </h3>
+          <div class="room-teaser__desc room-description">
+            <a href="/rooms/1" class="room-teaser__desc-link">京都の中心地に位置する伝統的な和風一戸建てです。和の雰囲気と現代的な設備を兼ね備えた空間で快適にお過ごしいただけます。京都駅からわずか900m、徒歩約15分の距離にあり、近鉄東寺駅からはたった130m、徒歩約2分とアクセス抜群！東寺駅から奈良へは電車で45分と、関西観光の拠点に最適なロケーションです。
+物件の間取り:
+
+1階:
+ダイニングテーブル、冷蔵庫、電子レンジ、電気ケトル、洗濯機、IH簡易キッチン、トイレ、洗面台、バスルーム完備。
+2階:
+和室2部屋、全体で最大5名様まで宿泊可能です。
+おすすめポイント＆周辺情報:
+
+ショッピング＆グルメ:
+徒歩600mの距離に大型ショッピングモール「AEON」があり、最寄りのローソンは徒歩80m、松屋まで200m、吉野家まで160mと、買い物や食事に便利です。
+観光＆交通:
+清水寺へは202系統バスで約15分。
+伏見稲荷大社へは電車で約20分。
+京都駅へは徒歩15分で、他都市や観光地へのアクセスも抜群です。
+
+家族旅行や友人同士の滞在、そして和風の暮らしを体験したい方にぴったりの空間です。皆様のお越しを心よりお待ちしております！
+宿泊先
+施設概要:
+当施設は、京都市の中心地に位置する伝統的な和風一戸建ての宿泊施設です。和の趣を感じながら、快適で便利な滞在をお楽しみいただけます。京都駅から徒歩15分、近鉄東寺駅から徒歩2分の好立地で、観光やショッピングに非常に便利です。
+
+設備と間取り:
+
+1階
+ダイニングエリア（テーブル＆椅子）
+冷蔵庫、電子レンジ、電気ケトル、IH簡易キッチン
+洗濯機、トイレ、洗面台、バスルーム
+2階
+和室2部屋
+最大5名様までご利用いただけます
+おすすめポイント:
+
+抜群のロケーション:
+近鉄東寺駅から奈良まで電車で約45分
+清水寺までバスで約15分
+伏見稲荷大社まで電車で約20分
+周辺環境:
+大型ショッピングモール「AEON」まで徒歩600m
+ローソン（コンビニエンスストア）まで徒歩80m
+松屋まで徒歩200m、吉野家まで徒歩160m
+ご利用案内:
+
+チェックイン: 午後3時以降
+チェックアウト: 午前10時まで
+全館禁煙
+伝統的な和風空間でのんびりとお過ごしいただきながら、観光の拠点としても最適な施設です。皆様のご予約をお待ちしております！
+ゲストの立ち入り範囲
+当施設は一棟貸切タイプとなっており、1階と2階の全エリアをご利用いただけます。
+
+1階: ダイニングスペース、キッチン、洗濯機、バスルーム、トイレ、洗面台
+2階: 和室2部屋
+
+ただし、一部の収納スペースや鍵のかかった場所は、私物保管のためご利用いただけません。それ以外のエリア（1階と2階）はすべて自由にお使いいただけますので、安心しておくつろぎください。
+その他の特記事項
+（1）本施設は全館禁煙です。室内や敷地内での喫煙は固くお断りしております。
+（2）騒音にはご配慮ください。特に夜間（21:00～翌朝8:00）は近隣の方のご迷惑にならないよう静かにお過ごしください。
+（3）ゴミの分別について：ペットボトルとその他のゴミを分別して捨ててください。
+（4）当施設の玄関は暗証番号式ロックを採用しております。暗証番号は、チェックイン当日に直接お伝えいたします。
+（5）ご到着前に、すべての宿泊者様のパスポートのコピーまたは写真を事前にお送りいただく必要がございます。
+（6）ペットの同伴はできません。
+（7）宿泊者以外の方の立ち入りは禁止です。予約された人数以上のご利用は追加料金が発生する場合がございますので、必ず事前にご連絡ください。
+登録情報
+旅館業法の許可番号 | 京都市 | 京都市指令保医セ第 261 号</a>
+          </div>
+          <div class="room-teaser__actions">
+            <a href="/rooms/1" class="btn-ink btn-sm">詳細を見る</a>
+          </div>
+        </div>
+      </div>
+    
+      <div class="room-teaser">
+        <a href="/rooms/2" class="room-teaser__image" aria-label="京都駅南・西九条川原城町59-26">
+          <img src="app/static/img/rooms/room_2_c19a89b6.avif" alt="京都駅南・西九条川原城町59-26">
+        </a>
+        <div class="room-teaser__body">
+          <h3 class="h4 title-serif">
+            <a href="/rooms/2" class="room-teaser__title-link">京都駅南・西九条川原城町59-26</a>
+          </h3>
+          <div class="room-teaser__desc room-description">
+            <a href="/rooms/2" class="room-teaser__desc-link">ようこそ、私たちの京都東寺近くの三階建て一戸建て民宿へ。ここでは、伝統的な日本家屋の魅力を活かした、落ち着いた和の空間をご提供いたします。民宿は東寺からすぐ、京都駅や近鉄東寺駅にも徒歩圏内という抜群の立地にあります。
+
+「宿の特徴」
+
+全室畳の和室：この民宿には洋式ベッドはなく、すべて畳の和室です。和の雰囲気を存分に味わいながら、リラックスしたひとときをお過ごしいただけます。4つの和室があり、それぞれのお部屋で2名様ずつご宿泊可能です。
+
+簡易キッチン：簡易キッチンを備えていますが、排気設備の関係で，火を使う調理はできません。
+
+三階建ての広々とした空間：最大で9名様まで宿泊可能で、2つのトイレと2つの浴室を完備しています。また、リビングルームや一階の茶室もあり、和の文化を感じながらゆったりとお過ごしいただけます。
+
+「便利なロケーション」
+東寺まで徒歩すぐの距離にあり、世界遺産を身近に感じることができます。京都駅まで徒歩850m、近鉄東寺駅まではわずか徒歩140mで、観光やビジネスにも最適な立地です。
+宿泊先
+当宿泊施設は、京都東寺近くに位置する三階建ての一戸建て貸切民宿です。日本の伝統的な家屋の雰囲気を活かしながら、快適で落ち着いた滞在を提供いたします。東寺から徒歩わずかの距離にあり、京都駅や近鉄東寺駅にも近く、観光やビジネスの拠点として最適です。
+
+施設の特徴
+
+貸切利用：他のゲストと共有することなく、プライベートな空間をお楽しみいただけます。
+広々としたスペース：最大8名様まで宿泊可能で、4つの和室、リビングルーム、茶室、簡易キッチンを完備しています。
+快適な設備：全ての部屋にエアコンを設置しており、夏は涼しい冷風、冬は暖かい暖風で快適にお過ごしいただけます。
+便利な生活空間：2つのトイレと2つの浴室があり、大人数での滞在にも対応可能。また、簡易キッチンには基本的な調理器具を備えています（火気の使用は不可）。
+立地の魅力
+
+周辺には便利な施設が多数あります。最寄りのコンビニはローソンで、ちょっとした買い物にも便利です。また、イオンモール京都へは徒歩700m以内で行けます。1階にはスーパーマーケット、4階には多数のレストランがあり、食事や買い物を楽しめます。
+京都駅へも徒歩圏内で、地下1階のPorta商店街にはたくさんのショップや飲食店が並んでいます。さらに、伊勢丹はショッピングの聖地として知られ、ファッションやお土産の購入に最適です。
+京都駅を北へ進むと、大型家電量販店のヨドバシカメラがあり、お土産や電化製品を購入するのに便利です。また、駅の東南側にはドン・キホーテがあり、深夜まで営業しているため夜間のショッピングも可能です。
+宿から400mの場所には、24時間営業の吉野家もあり、夜遅い時間でも手軽に食事が楽しめます。
+この宿泊施設は、静かな住宅街にありながら、周辺にショッピングや飲食を楽しめる施設が揃っており、利便性と快適さを兼ね備えています。家族旅行や友人同士のご旅行に最適な空間で、特別な京都の滞在をお楽しみください。
+ゲストの立ち入り範囲
+当民宿は完全貸切となっておりますので、他のゲストとの共有はなく、ご利用いただく空間は全てご予約いただいたお客様専用です。
+全ての空間はお客様専用であり、他のゲストが滞在することはございません。安心してプライベートな時間をお楽しみください。
+その他の特記事項
+1. **騒音について**
+当施設は住宅街に位置しており、近隣住民の方々との良好な関係を保つため、深夜や早朝の騒音には十分ご注意ください。特に22時以降は静かにお過ごしいただきますようお願いいたします。
+
+2. **喫煙について**
+施設内は全面禁煙です。喫煙される場合は、指定された喫煙エリアをご利用ください。
+
+3. **ゴミの分別について**
+京都市ではゴミの分別が義務付けられています。水のペットボトルなどのリサイクルゴミと、それ以外の一般ゴミを分けてください。ゴミ袋がいっぱいになった場合は、袋の口をしっかり結んでお部屋の中に置いてください。新しいゴミ袋は引き出しの中にございますので、必要に応じて黄色い袋をお使いください。
+
+4. **ペットについて**
+申し訳ございませんが、当施設ではペットの同伴はお断りしております。
+
+5. **駐車場について**
+施設には専用駐車場がございません。お車でお越しの場合は、近隣のコインパーキングをご利用ください。
+
+6. **チェックインとチェックアウトについて**
+通常、チェックイン時にはホストが直接お迎えし対応いたします。ただし、ホストが都合により対応できない場合には、セルフチェックインをお願いする場合がございます。ご予約後、Airbnbを通じて到着予定時刻をお知らせいただければ、お迎えの手配をさせていただきます。チェックアウトはセルフチェックアウトとなりますので、退室前にお忘れ物がないかご確認ください。
+
+7. **緊急連絡**
+滞在中に何か問題が発生した場合は、Airbnbのメッセージ機能を通じて速やかにご連絡ください。
+
+快適で安心なご滞在となるよう、全力でサポートさせていただきますので、よろしくお願いいたします。
+登録情報
+旅館業法の許可番号 | 京都市 | 京都市指令保医セ第　196　号</a>
+          </div>
+          <div class="room-teaser__actions">
+            <a href="/rooms/2" class="btn-ink btn-sm">詳細を見る</a>
+          </div>
+        </div>
+      </div>
+    
+      <div class="room-teaser">
+        <a href="/rooms/3" class="room-teaser__image" aria-label="鴨川リバーサイド・朝日プラザ鴨川109">
+          <img src="app/static/img/rooms/room_3_40b69186.avif" alt="鴨川リバーサイド・朝日プラザ鴨川109">
+        </a>
+        <div class="room-teaser__body">
+          <h3 class="h4 title-serif">
+            <a href="/rooms/3" class="room-teaser__title-link">鴨川リバーサイド・朝日プラザ鴨川109</a>
+          </h3>
+          <div class="room-teaser__desc room-description">
+            <a href="/rooms/3" class="room-teaser__desc-link">本物件は公寓の1階に位置しており、快適で便利な滞在を提供します。無料で2台の自転車とポケットWi-Fiを利用でき、観光やビジネスでのご利用に最適です。周辺は静かな住宅街で、穏やかな環境の中でお過ごしいただけます。
+公寓内にはコイン式洗濯機と乾燥機が設置されており、長期滞在にも便利です。
+また、部屋はコンパクトな設計となっており、体型が大きい方や広いスペースを必要とされる方には適しておりませんので、予めご了承ください！！
+鴨川は京都を代表する名所の一つで、近隣には京都駅があり、利便性が高いロケーションです。また、人気の紅葉スポット「東福寺」へは徒歩約12分でアクセスできます。
+
+【交通アクセス】
+JR京都駅：徒歩10～15分 850m
+京阪電車 東福寺駅：徒歩8～10分
+京都バス（202・207・208系統）「九条河原町」停留所：徒歩5～7分
+【周辺施設】
+コンビニ：
+LAWSON 100 河原町九条店：徒歩6分
+ファミリーマート 東福寺店：徒歩8～10分
+さらに、鴨川サイクリング・ランニングロードへは徒歩1分。自転車で鴨川沿いを進めば、四条大橋まで約15分で到着します。
+宿泊先
+本施設は公寓の1階に位置し、快適で便利な滞在を提供します。無料で2台の自転車とポケットWi-Fiをご利用いただけるため、観光やビジネスでのご利用に最適です。周辺は静かな住宅街にあり、穏やかな環境でリラックスしてお過ごしいただけます。
+
+お部屋は13.57㎡とコンパクトなサイズで、畳敷きのスペースが特徴です。最大で2名様までご宿泊いただけます。室内には電子レンジや小型冷蔵庫を備えており、簡単な食事の準備にも対応可能です。また、トイレとシャワーは一体型のユニットバスとなっております。
+
+施設内にはコイン式洗濯機と乾燥機を完備しており、長期滞在にも便利です。
+
+お部屋が小さいため、体型が大きい方や広いスペースをお求めの方には適しておりませんので、予めご了承ください。
+
+【周辺情報】
+鴨川：徒歩1分でサイクリングやランニングロードにアクセス可能。自転車で四条大橋まで約15分です。
+イオンモール京都：徒歩約900m。買い物や食事に便利です。
+【交通アクセス】
+JR京都駅：徒歩10～15分
+京阪電車 東福寺駅：徒歩8～10分
+京都バス（202・207・208系統）「九条河原町」停留所：徒歩5～7分
+【周辺施設】
+コンビニ：
+LAWSON 100 河原町九条店：徒歩6分
+ファミリーマート 東福寺店：徒歩8～10分
+ゲストの立ち入り範囲
+ゲストが立ち入り可能なエリアは以下の通りです：
+
+（1）宿泊専用エリア：予約されたお部屋（室内全スペース）
+共用エリア：
+（2）コイン式洗濯機および乾燥機（設置場所の利用可能時間を遵守してください）
+（3）自転車置き場（無料貸出の自転車2台をご利用いただけます）
+注意事項：
+
+共用部分では他の住人の迷惑にならないよう配慮をお願いいたします。
+施設内でのイベントやパーティーは禁止されています。
+宿泊予約のないエリアや施設部分への立ち入りはご遠慮ください。
+その他の特記事項
+ご滞在いただく際に、以下の点にご留意ください：
+
+【騒音について】
+
+公共エリアやお部屋では、近隣住民や他のゲストの迷惑にならないようお静かにお過ごしください。特に夜間（22:00～翌朝7:00）は音量にご注意ください。
+
+【施設の利用について】
+
+お部屋や共用エリアの設備は丁寧にご利用ください。破損や汚損が発生した場合は、速やかにご連絡をお願いいたします。
+
+【ゴミの分別について】
+
+（1）ゴミはペットボトルとその他のゴミに分別してください。
+（2）退房時はゴミの処分は不要です。スタッフが回収いたしますので、そのままお部屋に置いておいてください。
+（3）長期滞在のゲストは、滞在中にゴミを公寓後門のゴミ収集所へ捨てていただけます。詳細な場所については、チェックイン時にご案内いたします。
+
+【喫煙について】
+
+全室禁煙です。喫煙は指定のエリアでのみお願いいたします。室内での喫煙が発覚した場合、清掃費を請求させていただくことがあります。
+
+【ペットについて】
+
+ペットの同伴はご遠慮いただいております。
+
+【防犯について】
+
+貴重品は必ずお持ちください。お部屋や施設内での紛失・盗難については責任を負いかねます。
+
+【緊急時の対応】
+
+火災や地震などの緊急時は、施設内の避難経路図に従い、安全を確保してください。
+この施設では、ゲストの皆様に快適で安全な滞在をお楽しみいただけるよう、上記のルールをご理解・ご協力くださいますようお願い申し上げます。
+登録情報
+M260013997</a>
+          </div>
+          <div class="room-teaser__actions">
+            <a href="/rooms/3" class="btn-ink btn-sm">詳細を見る</a>
+          </div>
+        </div>
+      </div>
+    
+  </div>
+  <div class="rooms-more">
+    <a href="/rooms" class="btn-transparent">すべての宿泊施設を見る</a>
+  </div>
+</section>
+
+<section class="section-block">
+  <div class="section-header">
+    <span class="section-header__kicker">KYOTO ESSENCE</span>
+    <h2 class="section-header__title">町家で味わう、京都らしさの断片</h2>
+  </div>
+  <div class="artisan-block">
+    <div class="artisan-panel">
+      <h3 class="h5 title-serif">灯りと香りの演出</h3>
+      <p>日が暮れると、行灯と香木の香りが土間を満たし、京都の夜にふさわしい静けさが訪れます。月替わりの調香で旅の記憶を彩ります。</p>
+    </div>
+    <div class="artisan-panel">
+      <h3 class="h5 title-serif">京菓子とのおもてなし</h3>
+      <p>老舗和菓子店と共同でつくるオリジナルの干菓子と抹茶をご用意。季節の花や行事に合わせたしつらえでお迎えします。</p>
+    </div>
+    <div class="artisan-panel">
+      <h3 class="h5 title-serif">旅のコンシェルジュ</h3>
+      <p>早朝の寺院拝観や、京友禅の型染め体験、町家でのライブ演奏など、ご要望に合わせた特別な時間を手配いたします。</p>
+    </div>
+  </div>
+</section>
+
+
+<section class="section-block">
+  <div class="section-header">
+    <span class="section-header__kicker">お知らせ</span>
+    <h2 class="section-header__title">お知らせ</h2>
+  </div>
+  <div class="list-group shadow-sm">
+    
+      <div class="list-group-item">
+        <h3 class="h5 title-serif">夏の川床朝食</h3>
+        <div class="text-muted small">2025-09-16 14:43:20.969491</div>
+        <p class="mb-2">鴨川沿いのテラスで楽しむ京野菜たっぷりの朝食を提供開始しました。</p>
+      </div>
+    
+      <div class="list-group-item">
+        <h3 class="h5 title-serif">春の特別茶会プラン</h3>
+        <div class="text-muted small">2025-09-16 14:43:20.969486</div>
+        <p class="mb-2">春限定の朝茶会と夜の灯りの演出を含む宿泊プランを3月より開始します。</p>
+      </div>
+    
+  </div>
+</section>
+
+
+<section class="callout mt-5">
+  <h2 class="section-header__title text-white mb-2">京都での滞在を丁寧に設計いたします</h2>
+  <p class="text-white-70">ご希望のテーマや日程をお知らせください。町家コンシェルジュが最適なプランをご提案し、予約から当日のご案内までサポートいたします。</p>
+  <div class="d-flex flex-wrap gap-3">
+    <a href="/contact" class="btn-outline-ink">お問い合わせ</a>
+  </div>
+</section>
+
+      </div>
+    </main>
+
+    <footer class="kyoto-footer mt-auto">
+      <div class="container-kyoto text-center d-grid gap-2">
+        <p>© 2025 Kakuka Anbo Co., Ltd.</p>
+        <p class="small">京都の静かな路地で、ゆったりとしたひとときを。</p>
+      </div>
+    </footer>
+
+    <!-- 回到顶部按钮 -->
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">
+      <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq6O9gBi" crossorigin="anonymous"></script>
+    <script src="app/static/js/script.js"></script>
+  </body>
+</html>

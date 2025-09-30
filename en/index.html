@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kakuka Anbo Co., Ltd.</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="京都传统民宿，提供舒适的和式住宿体验。位于京都中心，交通便利，是体验日本传统文化的理想选择。">
+    <meta name="keywords" content="京都民宿,和式住宿,日本传统文化,京都旅游,民宿预订,Airbnb京都,京都中心,传统建筑">
+    <meta name="author" content="Kakuka Anbo Co., Ltd.">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="en">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://localhost/en/">
+    <meta property="og:title" content="京都传统民宿 - Kakuka Anbo Co., Ltd.">
+    <meta property="og:description" content="体验真正的京都传统生活，我们提供舒适的和式住宿，让您感受日本文化的魅力。">
+    <meta property="og:image" content="http://localhost/static/img/logo.png">
+    <meta property="og:site_name" content="Kakuka Anbo Co., Ltd.">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="http://localhost/en/">
+    <meta property="twitter:title" content="Kakuka Anbo Co., Ltd.">
+    <meta property="twitter:description" content="京都传统民宿，提供舒适的和式住宿体验。位于京都中心，交通便利，是体验日本传统文化的理想选择。">
+    <meta property="twitter:image" content="http://localhost/static/img/logo.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="app/static/img/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="app/static/img/favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="app/static/img/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="app/static/css/style.css">
+  </head>
+  <body class="kyoto-body d-flex flex-column min-vh-100 home-page">
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light navbar-kyoto sticky-top shadow-sm">
+        <div class="container-xxl">
+          <a class="navbar-brand" href="/en/">
+            <img src="app/static/img/logo.png" alt="Kakuka Anbo Co., Ltd." class="logo-img">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item"><a class="nav-link" href="/en/">Home</a></li>
+              <li class="nav-item"><a class="nav-link" href="/en/rooms">Rooms</a></li>
+              <li class="nav-item"><a class="nav-link" href="/en/management">Management</a></li>
+              
+              <li class="nav-item"><a class="nav-link" href="/en/contact">Contact</a></li>
+              <li class="nav-item"><a class="nav-link" href="/admin/login">Admin</a></li>
+              
+              <li class="nav-item">
+                <div class="d-flex align-items-center gap-1">
+                  
+                    <a class="nav-link p-1 " 
+                       href="/lang/ja?next=/en/?"
+                       title="Japanese">
+                      <img src="app/static/img/flags/ja.svg" 
+                           alt="Japanese" 
+                           class="flag-icon flag-clickable">
+                    </a>
+                  
+                    <a class="nav-link p-1 active" 
+                       href="/lang/en?next=/en/?"
+                       title="English">
+                      <img src="app/static/img/flags/en.svg" 
+                           alt="English" 
+                           class="flag-icon flag-clickable">
+                    </a>
+                  
+                    <a class="nav-link p-1 " 
+                       href="/lang/zh?next=/en/?"
+                       title="Chinese">
+                      <img src="app/static/img/flags/zh.svg" 
+                           alt="Chinese" 
+                           class="flag-icon flag-clickable">
+                    </a>
+                  
+                </div>
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="kyoto-main flex-grow-1">
+      <div class="container-kyoto">
+        
+          
+        
+        
+<section class="hero-bleed">
+  <div class="hero-bleed__content">
+    <div class="row g-5 align-items-start">
+      <div class="col-12 col-lg-7">
+        <span class="hero-kicker animate-fade-in animate-delay-1">KYOTO </span>
+        <h1 class="hero-title animate-fade-in-up animate-delay-2">Kyoto accommodations<br>for your peaceful stay</h1>
+        <p class="hero-subtext animate-fade-in-up animate-delay-3">We offer diverse accommodations across Kyoto. From traditional machiya townhouses to modern apartments, choose the perfect stay for your travel style.</p>
+        <div class="hero-badge mt-4 animate-fade-in-up animate-delay-4">
+          <i class="bi bi-flower1"></i>
+          Multiple accommodation types available
+        </div>
+      </div>
+      <div class="col-12 col-lg-5">
+        <div class="hero-sidecard animate-slide-in-right animate-delay-3">
+          <h2 class="h5 mb-0 title-serif">Experience the seasons and Kyoto craftsmanship</h2>
+          <ul>
+            <li>Diverse options from traditional machiya to modern apartments</li>
+            <li>Prime locations from near Kyoto Station to riverside</li>
+            <li>Perfect for solo travelers to family trips</li>
+          </ul>
+          <div class="d-flex flex-column gap-1">
+            <span class="small text-muted">Multiple accommodation options available</span>
+            <span class="small text-muted">Detached house available, ideal for families</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-block">
+  <div class="section-header">
+    <span class="section-header__kicker">STAY IN KYOTO</span>
+    <h2 class="section-header__title">Experience the seasons and Kyoto craftsmanship</h2>
+    <p class="section-header__lead">Spring brings sakura fragrance, summer the cool river breeze, autumn glowing foliage, and winter the warmth of charcoal. Every stay is curated to savour Kyoto with all five senses.</p>
+  </div>
+  <div class="stay-grid">
+    <div class="stay-card">
+      <span class="stay-card__tag">TEA &amp; MORNING</span>
+      <h3 class="stay-card__title">Morning tea ceremony &amp; seasonal breakfast</h3>
+      <p class="stay-card__body">Begin the day with a tea master-led ceremony and a Kyoto-style breakfast of seasonal vegetables served in the machiya doma.</p>
+    </div>
+    <div class="stay-card">
+      <span class="stay-card__tag">EXPERIENCE</span>
+      <h3 class="stay-card__title">Hidden walks &amp; private temple visits</h3>
+      <p class="stay-card__body">Our concierge crafts itineraries of alleyway strolls, garden viewings, and seasonal rituals tailored to your interests.</p>
+    </div>
+    <div class="stay-card">
+      <span class="stay-card__tag">MINPAKU OPS</span>
+      <h3 class="stay-card__title">One‑stop management for minpaku operations</h3>
+      <p class="stay-card__body">From OTA ops and unmanned workflows to housekeeping, we maximize returns.</p>
+      <div><a class="btn-outline-ink btn-sm" href="/management">Free consultation</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-block">
+  <div class="section-header">
+    <span class="section-header__kicker">ROOMS</span>
+    <h2 class="section-header__title">Kyoto Accommodation Options</h2>
+    <p class="section-header__lead">We offer diverse accommodations across Kyoto. From traditional machiya townhouses to modern apartments, choose what suits your travel needs.</p>
+  </div>
+  <div class="rooms-grid">
+    
+      <div class="room-teaser">
+        <a href="/rooms/1" class="room-teaser__image" aria-label="Kyoto Station South · 53-3 Nishikujo Shimacho">
+          <img src="app/static/img/rooms/room_1_3ce837d2.avif" alt="Kyoto Station South · 53-3 Nishikujo Shimacho">
+        </a>
+        <div class="room-teaser__body">
+          <h3 class="h4 title-serif">
+            <a href="/rooms/1" class="room-teaser__title-link">Kyoto Station South · 53-3 Nishikujo Shimacho</a>
+          </h3>
+          <div class="room-teaser__desc room-description">
+            <a href="/rooms/1" class="room-teaser__desc-link">Overview
+
+This is a traditional Japanese-style detached house located in the heart of Kyoto. It offers the charm of a classic Japanese atmosphere combined with modern facilities, ensuring a comfortable stay.
+The property is just 900m from Kyoto Station (about a 15-minute walk) and only 130m from Kintetsu Tōji Station (a 2-minute walk), making access extremely convenient. From Tōji Station, it takes only 45 minutes by train to reach Nara, making this the perfect base for exploring the Kansai region.
+
+Layout
+
+1st Floor
+	•	Dining table &amp; chairs
+	•	Refrigerator, microwave, electric kettle, IH kitchenette
+	•	Washing machine, toilet, wash basin, bathroom
+
+2nd Floor
+	•	2 Japanese-style rooms (tatami rooms)
+	•	Accommodates up to 5 guests
+
+Highlights &amp; Nearby
+	•	Shopping &amp; Dining: AEON shopping mall (600m), Lawson convenience store (80m), Matsuya (200m), Yoshinoya (160m)
+	•	Tourist Access: Kiyomizu-dera Temple (approx. 15 min by bus No.202), Fushimi Inari Shrine (20 min by train), Kyoto Station (15 min walk)
+
+Guest Access
+
+The entire house (1st &amp; 2nd floors) is available for private use. Some locked storage spaces are reserved for personal belongings and not accessible.
+
+House Rules
+	1.	Entirely non-smoking (indoors &amp; on premises).
+	2.	Please keep noise to a minimum, especially between 9:00 PM – 8:00 AM.
+	3.	Separate PET bottles from other garbage.
+	4.	Entrance uses a PIN code lock (code provided on check-in day).
+	5.	Copies or photos of all guests’ passports are required before arrival.
+	6.	No pets allowed.
+	7.	Only registered guests may enter. Additional charges may apply if extra guests stay without prior notice.
+
+Registration
+
+Hotel Business License: Kyoto City | Kyoto City Directive No. 261
+
+We warmly welcome families, groups of friends, and anyone wishing to experience traditional Japanese living in Kyoto!</a>
+          </div>
+          <div class="room-teaser__actions">
+            <a href="/rooms/1" class="btn-ink btn-sm">View Details</a>
+          </div>
+        </div>
+      </div>
+    
+      <div class="room-teaser">
+        <a href="/rooms/2" class="room-teaser__image" aria-label="Kyoto Station South · 59-26 Nishikujo Kawaharajocho">
+          <img src="app/static/img/rooms/room_2_c19a89b6.avif" alt="Kyoto Station South · 59-26 Nishikujo Kawaharajocho">
+        </a>
+        <div class="room-teaser__body">
+          <h3 class="h4 title-serif">
+            <a href="/rooms/2" class="room-teaser__title-link">Kyoto Station South · 59-26 Nishikujo Kawaharajocho</a>
+          </h3>
+          <div class="room-teaser__desc room-description">
+            <a href="/rooms/2" class="room-teaser__desc-link">Welcome
+
+Welcome to our three-story Japanese-style guesthouse near Tōji Temple in Kyoto.
+Here you can enjoy the charm of a traditional Japanese home with calm tatami spaces, while staying in a convenient location just steps from Tōji Temple, Kyoto Station, and Kintetsu Tōji Station.
+
+Features
+	•	All Tatami Rooms: The house has no Western beds; instead, all 4 rooms are traditional tatami rooms. Each room can host 2 guests, allowing up to 8–9 people in total. Relax and experience the authentic Japanese atmosphere.
+	•	Kitchenette: Equipped with basic cooking utensils. Please note: due to ventilation limitations, open-flame cooking is not allowed.
+	•	Spacious 3-Story House: With 2 toilets and 2 bathrooms, plus a living room and a tearoom on the first floor. The layout is ideal for families or groups.
+	•	Comfortable Facilities: Every room has air conditioning—cool in summer, warm in winter.
+
+Location
+	•	Tōji Temple: Just a short walk away.
+	•	Kyoto Station: 850m (about 10 min walk).
+	•	Kintetsu Tōji Station: 140m (2 min walk).
+Perfect for both sightseeing and business trips.
+
+Nearby you’ll find:
+	•	Lawson convenience store (short walk).
+	•	AEON Mall Kyoto (700m), with a supermarket, many restaurants, and shops.
+	•	Porta underground shopping street, Isetan department store, Yodobashi Camera, and Don Quijote near Kyoto Station.
+	•	Yoshinoya (24h) just 400m away for late-night meals.
+
+Guest Access
+
+The entire property is for your private use. No shared areas with other guests.
+
+House Rules
+	1.	Noise: Please be quiet after 10 PM as the house is in a residential neighborhood.
+	2.	Smoking: No smoking inside. Please use designated outdoor smoking areas.
+	3.	Trash: Separate PET bottles from other waste. Use the provided yellow bags when replacing full ones.
+	4.	Pets: Not allowed.
+	5.	Parking: No on-site parking. Please use nearby coin-operated lots.
+	6.	Check-in/Check-out: Normally in person, but self check-in may be arranged. Please inform us of your arrival time via Airbnb.
+	7.	Emergencies: Contact us through Airbnb messages if issues arise.
+
+Registration
+
+Hotel Business License: Kyoto City | Kyoto City Directive No. 196
+
+We look forward to welcoming you and making your Kyoto stay comfortable and memorable!
+</a>
+          </div>
+          <div class="room-teaser__actions">
+            <a href="/rooms/2" class="btn-ink btn-sm">View Details</a>
+          </div>
+        </div>
+      </div>
+    
+      <div class="room-teaser">
+        <a href="/rooms/3" class="room-teaser__image" aria-label="Kamogawa Riverside · Asahi Plaza 109">
+          <img src="app/static/img/rooms/room_3_40b69186.avif" alt="Kamogawa Riverside · Asahi Plaza 109">
+        </a>
+        <div class="room-teaser__body">
+          <h3 class="h4 title-serif">
+            <a href="/rooms/3" class="room-teaser__title-link">Kamogawa Riverside · Asahi Plaza 109</a>
+          </h3>
+          <div class="room-teaser__desc room-description">
+            <a href="/rooms/3" class="room-teaser__desc-link">Property Overview
+
+This property is located on the 1st floor of an apartment building, offering a comfortable and convenient stay in a quiet residential neighborhood. Guests can enjoy 2 free bicycles and a pocket Wi-Fi, making it ideal for both sightseeing and business trips.
+
+Coin-operated laundry machines (washer &amp; dryer) are available in the building, which is especially convenient for long-term stays.
+Please note: The room is compact (13.57㎡) with tatami flooring, suitable for up to 2 guests. It may not be ideal for very tall or large-sized guests.
+
+Nearby, you can easily access the Kamo River (1 min walk), Kyoto Station (850m, 10–15 min walk), and the popular autumn foliage spot Tōfuku-ji Temple (approx. 12 min walk).
+
+Room Features
+	•	13.57㎡ compact tatami-style room
+	•	Up to 2 guests
+	•	Microwave &amp; mini fridge
+	•	Unit bathroom (toilet + shower)
+	•	Air conditioning
+	•	Free pocket Wi-Fi
+	•	Free use of 2 bicycles
+
+Facilities
+	•	Coin-operated washing machine &amp; dryer (shared)
+	•	Bicycle parking (with 2 free rental bicycles)
+
+Location
+	•	JR Kyoto Station: 10–15 min walk (850m)
+	•	Keihan Tōfuku-ji Station: 8–10 min walk
+	•	Kyoto Bus (202/207/208) “Kujō Kawaramachi” stop: 5–7 min walk
+
+Nearby Convenience
+	•	Lawson 100 (Kawaramachi Kujō): 6 min walk
+	•	FamilyMart (Tōfuku-ji): 8–10 min walk
+	•	Aeon Mall Kyoto: 900m (shops, restaurants, supermarket)
+	•	Kamo River Cycling Road: 1 min walk, about 15 min by bike to Shijō Bridge
+
+Guest Access
+	•	Reserved guest room (entire space)
+	•	Shared facilities: laundry, bicycle parking
+	•	No parties or unregistered guests allowed
+
+House Rules
+	1.	Noise: Please keep quiet, especially 10:00 PM – 7:00 AM.
+	2.	Smoking: Entirely non-smoking indoors. Use designated smoking areas.
+	3.	Trash: Separate PET bottles and other trash. Staff will collect upon check-out.
+	4.	Pets: Not allowed.
+	5.	Security: Please keep valuables with you. We cannot take responsibility for lost items.
+	6.	Emergency: Follow evacuation instructions in case of fire/earthquake.
+
+Registration
+
+Hotel Business License: M260013997
+
+This compact room is perfect for couples, solo travelers, or business guests who value convenience, quiet surroundings, and easy access to Kyoto’s highlights.</a>
+          </div>
+          <div class="room-teaser__actions">
+            <a href="/rooms/3" class="btn-ink btn-sm">View Details</a>
+          </div>
+        </div>
+      </div>
+    
+  </div>
+  <div class="rooms-more">
+    <a href="/rooms" class="btn-transparent">View All Stays</a>
+  </div>
+</section>
+
+<section class="section-block">
+  <div class="section-header">
+    <span class="section-header__kicker">KYOTO ESSENCE</span>
+    <h2 class="section-header__title">Fragments of Kyoto to savour within the machiya</h2>
+  </div>
+  <div class="artisan-block">
+    <div class="artisan-panel">
+      <h3 class="h5 title-serif">Lighting &amp; Fragrance</h3>
+      <p>At dusk, lanterns and incense fill the doma with serenity. Monthly fragrances keep your Kyoto memories vivid.</p>
+    </div>
+    <div class="artisan-panel">
+      <h3 class="h5 title-serif">Welcome sweets</h3>
+      <p>Enjoy original confections created with a historic wagashi shop, paired with matcha and seasonal displays.</p>
+    </div>
+    <div class="artisan-panel">
+      <h3 class="h5 title-serif">Travel concierge</h3>
+      <p>From dawn temple visits to yuzen dye workshops and townhouse concerts, we arrange experiences tailored to you.</p>
+    </div>
+  </div>
+</section>
+
+
+<section class="section-block">
+  <div class="section-header">
+    <span class="section-header__kicker">News</span>
+    <h2 class="section-header__title">News</h2>
+  </div>
+  <div class="list-group shadow-sm">
+    
+      <div class="list-group-item">
+        <h3 class="h5 title-serif">Summer Riverside Breakfast</h3>
+        <div class="text-muted small">2025-09-16 14:43:20.969491</div>
+        <p class="mb-2">We now serve a Kamogawa riverside breakfast featuring seasonal Kyoto vegetables on the terrace.</p>
+      </div>
+    
+      <div class="list-group-item">
+        <h3 class="h5 title-serif">Spring Tea Ceremony Stay</h3>
+        <div class="text-muted small">2025-09-16 14:43:20.969486</div>
+        <p class="mb-2">Starting in March we offer a seasonal stay that includes a private morning tea ceremony and evening lantern experience.</p>
+      </div>
+    
+  </div>
+</section>
+
+
+<section class="callout mt-5">
+  <h2 class="section-header__title text-white mb-2">Let us design your Kyoto stay with care</h2>
+  <p class="text-white-70">Share your preferred themes and schedule. Our concierge will craft the ideal plan and assist from booking to check-out.</p>
+  <div class="d-flex flex-wrap gap-3">
+    <a href="/contact" class="btn-outline-ink">Contact Us</a>
+  </div>
+</section>
+
+      </div>
+    </main>
+
+    <footer class="kyoto-footer mt-auto">
+      <div class="container-kyoto text-center d-grid gap-2">
+        <p>© 2025 Kakuka Anbo Co., Ltd.</p>
+        <p class="small">In the quiet backstreets of Kyoto, enjoy a moment of serenity.</p>
+      </div>
+    </footer>
+
+    <!-- 回到顶部按钮 -->
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">
+      <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq6O9gBi" crossorigin="anonymous"></script>
+    <script src="app/static/js/script.js"></script>
+  </body>
+</html>
