@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "room_id": 1,
+    "name": "测试用户",
+    "email": "guest@example.com",
+    "check_in": "2025-09-23",
+    "check_out": "2025-09-25",
+    "guests": 2,
+    "status": "Confirmed",
+    "created_at": "2025-09-16 12:38:07.386445",
+    "updated_at": null
+  },
+  {
+    "id": 2,
+    "room_id": 1,
+    "name": "3",
+    "email": "iamcheyan@gmail.com",
+    "check_in": "2025-09-16",
+    "check_out": "2025-09-26",
+    "guests": 2,
+    "status": "Pending",
+    "created_at": "2025-09-16 12:41:14.424504",
+    "updated_at": null
+  }
+]

@@ -1,7 +1,7 @@
 # 京都民宿管理系统
 
-一个基于Flask + SQLAlchemy + Bootstrap的现代化多语言民宿预订和管理网站，专为京都地区民宿经营者设计的全栈解决方案。
+一个基于Flask + JSON存储 + Bootstrap的现代化多语言民宿预订和管理网站，专为京都地区民宿经营者设计的全栈解决方案。
 
 **核心功能：** 多语言房源展示、Airbnb集成预订、完整后台管理、自动数据备份、响应式设计  
-**技术栈：** Flask + SQLAlchemy + Bootstrap 5 + SQLite + 多语言架构  
+**技术栈：** Flask + JSON存储 + Bootstrap 5 + 多语言架构  
 **特色：** 日式美学设计、SEO优化、用户友好界面

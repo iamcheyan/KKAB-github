@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "key": "contact",
+    "heading_ja": "お問い合わせ",
+    "heading_en": "Contact",
+    "heading_zh": "联系我们",
+    "body_ja": "ご宿泊や体験に関するご相談はいつでもお気軽にお寄せください。",
+    "body_en": "We are happy to assist with any questions about your stay or curated experiences.",
+    "body_zh": "如需定制行程或有任何疑问，欢迎随时与我们联络。",
+    "extra": {
+      "address": {
+        "ja": "京都市南区西九条川原城町59-26",
+        "en": "59-26 Nishikujo Kawaharajocho, Minami-ku, Kyoto-shi, Kyoto, Japan",
+        "zh": "京都市南区西九条川原城町59-26"
+      },
+      "phone": "+81-070-9065-6923",
+      "email": "kaka.kyoto.biz@gmail.com",
+      "wechat_qr": "img/wx.jpg",
+      "line_qr": "img/line.jpg"
+    }
+  }
+]

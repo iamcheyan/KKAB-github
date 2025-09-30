@@ -12,7 +12,7 @@
         <div>
           <h2 class="h5 mb-1">{{ item.title_ja }}</h2>
           <div class="text-muted small">
-            {{ item.published_at.strftime('%Y-%m-%d') }} · {{ '公開中' if item.is_published else '下書き' }}
+            {{ item.published_at }} · {{ '公開中' if item.is_published else '下書き' }}
           </div>
           <p class="mb-0 mt-1">{{ item.body_ja[:100] }}{% if item.body_ja|length > 100 %}...{% endif %}</p>
         </div>

@@ -15,7 +15,6 @@ from flask_wtf import CSRFProtect, FlaskForm
 from flask_wtf.file import FileField
 from werkzeug.datastructures import FileStorage
 from wtforms.validators import DataRequired
-from sqlalchemy import inspect, text
 from urllib.parse import urljoin, urlparse
 
 from forms import (
@@ -29,7 +28,7 @@ from forms import (
     UserManagementForm,
     ChangePasswordForm,
 )
-from models import Admin, Booking, Message, News, Room, SiteContent, db
+from json_models import Room, Booking, Message, Admin, News, SiteContent, room_model, booking_model, message_model, news_model, site_content_model, data_manager
 from translations import DEFAULT_LANGUAGE, LANGUAGES, TRANSLATIONS
 
 
@@ -37,12 +36,10 @@ csrf = CSRFProtect()
 
 
 def create_app() -> Flask:
-    """Application factory configuring Flask, database, and login."""
+    """Application factory configuring Flask and login."""
     app = Flask(__name__, template_folder='templates', static_folder='static')
     app.config.update(
         SECRET_KEY=os.environ.get("SECRET_KEY", "dev-secret-key"),
-        SQLALCHEMY_DATABASE_URI=f"sqlite:///{os.path.abspath('db.db')}",
-        SQLALCHEMY_TRACK_MODIFICATIONS=False,
     )
     
     # JSONデータ読み込み関数
@@ -94,14 +91,13 @@ def create_app() -> Flask:
         save_users(users)
         return True
     
-    # 関数をアプリケーションコンテキストに追加
+    # 关函数をアプリケーションコンテキストに追加
     app.load_home_content = load_home_content
     app.load_users = load_users
     app.add_user_to_json = add_user_to_json
     app.update_user_password = update_user_password
     app.delete_user_from_json = delete_user_from_json
 
-    db.init_app(app)
     csrf.init_app(app)
 
     def get_locale() -> str:
@@ -138,147 +134,51 @@ def create_app() -> Flask:
         test_url = urlparse(urljoin(request.host_url, target))
         return test_url.scheme in {"http", "https"} and ref_url.netloc == test_url.netloc
 
-    # 确保数据库文件存在，如果不存在则创建基本表结构
+    # 确保JSON数据目录存在
     with app.app_context():
-        db_path = "db.db"
+        data_dir = "data"
+        if not os.path.exists(data_dir):
+            print(f"创建数据目录: {data_dir}")
+            os.makedirs(data_dir, exist_ok=True)
         
-        # 打印当前使用的数据库地址
-        print(f"当前使用的数据库地址: {app.config['SQLALCHEMY_DATABASE_URI']}")
-        print(f"数据库文件路径: {os.path.abspath(db_path)}")
+        print(f"使用JSON文件存储数据，数据目录: {os.path.abspath(data_dir)}")
         
-        # 如果数据库文件不存在，提示用户并退出
-        if not os.path.exists(db_path):
-            print("错误：数据库文件 db.db 不存在！")
-            print("请恢复数据库文件后再启动应用程序。")
-            print("可以使用备份文件：backups/latest.sql 或 backups/guesthouse_backup_*.sql")
-            import sys
-            sys.exit(1)
+        # 检查必要的JSON文件是否存在
+        required_files = ['rooms.json', 'bookings.json', 'messages.json', 'admins.json', 'news.json', 'site_content.json']
+        missing_files = []
+        
+        for filename in required_files:
+            file_path = os.path.join(data_dir, filename)
+            if not os.path.exists(file_path):
+                missing_files.append(filename)
+        
+        if missing_files:
+            print(f"警告：缺少以下JSON数据文件: {', '.join(missing_files)}")
+            print("如果这是首次运行，请先运行数据迁移脚本: python3 migrate_data.py")
+            # 创建空的JSON文件以避免错误
+            for filename in missing_files:
+                file_path = os.path.join(data_dir, filename)
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    import json
+                    json.dump([], f)
+                print(f"创建空的数据文件: {filename}")
         else:
-            print("使用现有的数据库文件")
-            # 只确保表结构存在，不插入数据
-            db.create_all()
+            print("所有JSON数据文件已就绪")
 
-        # 确保多语言字段存在（向后兼容）
-        inspector = inspect(db.engine)
-
-        def ensure_column(table: str, column: str, ddl: str) -> None:
-            """Add a column to an existing table if it's missing."""
-            nonlocal inspector
-            try:
-                if column not in {col["name"] for col in inspector.get_columns(table)}:
-                    db.session.execute(text(f"ALTER TABLE {table} ADD COLUMN {column} {ddl}"))
-                    db.session.commit()
-                    # Refresh inspector metadata for subsequent checks.
-                    inspector = inspect(db.engine)
-            except Exception as e:
-                print(f"警告：无法添加列 {table}.{column}: {e}")
-
-        # 确保多语言字段和Airbnb链接存在于旧数据库中
-        ensure_column("room", "name_ja", "VARCHAR(120)")
-        ensure_column("room", "name_en", "VARCHAR(120)")
-        ensure_column("room", "name_zh", "VARCHAR(120)")
-        ensure_column("room", "description_ja", "TEXT")
-        ensure_column("room", "description_en", "TEXT")
-        ensure_column("room", "description_zh", "TEXT")
-        ensure_column("room", "airbnb_url", "VARCHAR(255)")
-        ensure_column("room", "address_ja", "VARCHAR(255)")
-        ensure_column("room", "address_en", "VARCHAR(255)")
-        ensure_column("room", "address_zh", "VARCHAR(255)")
-        ensure_column("room", "permit_number", "VARCHAR(120)")
-
-        # 确保多语言字段存在于news表
-        ensure_column("news", "title_ja", "VARCHAR(200)")
-        ensure_column("news", "title_en", "VARCHAR(200)")
-        ensure_column("news", "title_zh", "VARCHAR(200)")
-        ensure_column("news", "body_ja", "TEXT")
-        ensure_column("news", "body_en", "TEXT")
-        ensure_column("news", "body_zh", "TEXT")
-        ensure_column("news", "is_published", "BOOLEAN")
-
-        # 确保多语言字段存在于site_content表
-        ensure_column("site_content", "heading_ja", "VARCHAR(200)")
-        ensure_column("site_content", "heading_en", "VARCHAR(200)")
-        ensure_column("site_content", "heading_zh", "VARCHAR(200)")
-        ensure_column("site_content", "body_ja", "TEXT")
-        ensure_column("site_content", "body_en", "TEXT")
-        ensure_column("site_content", "body_zh", "TEXT")
-        ensure_column("site_content", "extra", "TEXT")
-
-        # 确保多语言字段存在于message表
-        ensure_column("message", "name_ja", "VARCHAR(100)")
-        ensure_column("message", "name_en", "VARCHAR(100)")
-        ensure_column("message", "name_zh", "VARCHAR(100)")
-        ensure_column("message", "content_ja", "TEXT")
-        ensure_column("message", "content_en", "TEXT")
-        ensure_column("message", "content_zh", "TEXT")
-        ensure_column("message", "reply_ja", "TEXT")
-        ensure_column("message", "reply_en", "TEXT")
-        ensure_column("message", "reply_zh", "TEXT")
-        ensure_column("message", "is_replied", "BOOLEAN")
-        ensure_column("message", "replied_at", "DATETIME")
-
-        # 确保admin表有password_hash列
-        ensure_column("admin", "password_hash", "VARCHAR(128)")
-
-        # 确保booking表有所有必需的列
-        ensure_column("booking", "status", "VARCHAR(20)")
-        ensure_column("booking", "created_at", "DATETIME")
-        ensure_column("booking", "updated_at", "DATETIME")
-
-        # 检查数据库状态
-        room_count = Room.query.count()
-        admin_count = Admin.query.count()
-        print(f"数据库状态：{room_count} 个房间，{admin_count} 个管理员账户")
+        # 检查数据状态
+        room_count = len(room_model.get_all())
+        admin_count = len(Admin.get_all(data_manager))
+        print(f"数据状态：{room_count} 个房间，{admin_count} 个管理员账户")
         
         if admin_count == 0:
-            print("警告：数据库中没有管理员账户，请通过管理界面创建管理员账户")
-
-        # 数据规范化处理（仅处理现有数据）
-        rooms_in_db = Room.query.all()
-        normalized = False
-        for room in rooms_in_db:
-            if room.image:
-                cleaned = room.image.lstrip("/")
-                if cleaned.startswith("static/"):
-                    cleaned = cleaned[len("static/") :]
-                if cleaned != room.image:
-                    room.image = cleaned
-                    normalized = True
-
-            if room.status == "Available":
-                room.status = "空室あり"
-                normalized = True
-
-            # 确保多语言字段有默认值
-            if not room.name_ja:
-                room.name_ja = room.name
-                normalized = True
-            if not room.description_ja:
-                room.description_ja = room.description
-                normalized = True
-            if not room.name_en:
-                room.name_en = room.name
-                normalized = True
-            if not room.description_en:
-                room.description_en = room.description
-                normalized = True
-            if not room.name_zh:
-                room.name_zh = room.name
-                normalized = True
-            if not room.description_zh:
-                room.description_zh = room.description
-                normalized = True
-
-        if normalized:
-            db.session.commit()
-            print("已更新房间数据的格式")
+            print("警告：没有管理员账户，请通过管理界面创建管理员账户")
 
     login_manager = LoginManager(app)
     login_manager.login_view = "admin_login"
 
     @login_manager.user_loader
     def load_user(user_id: str):
-        return Admin.query.get(int(user_id))
+        return Admin.get_by_id(int(user_id))
 
     @app.context_processor
     def inject_globals():
@@ -333,7 +233,7 @@ def create_app() -> Flask:
 
         def home_text(key: str) -> str:
             if not _home_cache["loaded"]:
-                _home_cache["content"] = SiteContent.query.filter_by(key="home").first()
+                _home_cache["content"] = SiteContent.get_by_key("home")
                 _home_cache["loaded"] = True
             content: SiteContent | None = _home_cache["content"]
             locale = get_locale()
@@ -409,42 +309,6 @@ def create_app() -> Flask:
             return f"img/rooms/{unique_filename}"
         return None
 
-    def _update_room_from_form(room: Room, form: RoomAdminForm) -> None:
-        room.name_ja = form.name_ja.data
-        room.name_en = form.name_en.data
-        room.name_zh = form.name_zh.data
-        room.description_ja = form.description_ja.data
-        room.description_en = form.description_en.data
-        room.description_zh = form.description_zh.data
-        room.address_ja = form.address_ja.data
-        room.address_en = form.address_en.data
-        room.address_zh = form.address_zh.data
-        room.permit_number = form.permit_number.data
-        
-        # Handle image upload
-        if form.image_file.data:
-            # If new image is uploaded, save it and update the path
-            new_image_path = _save_uploaded_file(form.image_file.data, room.id)
-            if new_image_path:
-                room.image = new_image_path
-        else:
-            # Keep existing image path
-            room.image = form.image.data
-            
-        room.airbnb_url = form.airbnb_url.data
-        # Legacy fields for simpler querying/default locale.
-        room.name = room.name_ja
-        room.description = room.description_ja
-
-    def _update_news_from_form(news: News, form: NewsForm) -> None:
-        news.title_ja = form.title_ja.data
-        news.title_en = form.title_en.data
-        news.title_zh = form.title_zh.data
-        news.body_ja = form.body_ja.data
-        news.body_en = form.body_en.data
-        news.body_zh = form.body_zh.data
-        news.is_published = form.is_published.data
-
     def _normalize_contact_extra(content: SiteContent | None) -> None:
         if not content:
             return
@@ -474,18 +338,15 @@ def create_app() -> Flask:
 
         if updated:
             content.extra = extra
-            db.session.commit()
+            content.save()
 
     @app.route("/")
     def index():
         # Show a curated list of rooms and general description.
-        featured_rooms = Room.query.limit(3).all()
-        news_items = (
-            News.query.filter_by(is_published=True)
-            .order_by(News.published_at.desc())
-            .limit(4)
-            .all()
-        )
+        featured_rooms = room_model.get_all()[:3]  # 获取前3个房间
+        news_items = [news for news in news_model.get_all() if news.get('is_published', True)]
+        news_items.sort(key=lambda x: x.get('published_at', ''), reverse=True)
+        news_items = news_items[:4]  # 获取前4个新闻
         home_content = app.load_home_content()
         return render_template("index.html", rooms=featured_rooms, news_items=news_items, home_content=home_content)
 
@@ -493,13 +354,10 @@ def create_app() -> Flask:
     def index_with_locale(locale: str):
         if locale in LANGUAGES:
             session["locale"] = locale
-        featured_rooms = Room.query.limit(3).all()
-        news_items = (
-            News.query.filter_by(is_published=True)
-            .order_by(News.published_at.desc())
-            .limit(4)
-            .all()
-        )
+        featured_rooms = room_model.get_all()[:3]  # 获取前3个房间
+        news_items = [news for news in news_model.get_all() if news.get('is_published', True)]
+        news_items.sort(key=lambda x: x.get('published_at', ''), reverse=True)
+        news_items = news_items[:4]  # 获取前4个新闻
         home_content = app.load_home_content()
         return render_template("index.html", rooms=featured_rooms, news_items=news_items, home_content=home_content)
 
@@ -553,30 +411,38 @@ def create_app() -> Flask:
 
     @app.route("/rooms")
     def rooms():
-        all_rooms = Room.query.all()
+        all_rooms = room_model.get_all()
         return render_template("rooms.html", rooms=all_rooms)
 
     @app.route("/<locale>/rooms")
     def rooms_with_locale(locale: str):
         if locale in LANGUAGES:
             session["locale"] = locale
-        all_rooms = Room.query.all()
+        all_rooms = room_model.get_all()
         return render_template("rooms.html", rooms=all_rooms)
 
     @app.route("/rooms/<int:room_id>")
     def room_detail(room_id: int):
-        room = Room.query.get_or_404(room_id)
+        room = room_model.get_by_id(room_id)
+        if not room:
+            from flask import abort
+            abort(404)
         # 获取其他房间作为推荐房源（排除当前房间）
-        recommended_rooms = Room.query.filter(Room.id != room_id).limit(3).all()
+        all_rooms = room_model.get_all()
+        recommended_rooms = [r for r in all_rooms if r.get('id') != room_id][:3]
         return render_template("room_detail.html", room=room, recommended_rooms=recommended_rooms)
 
     @app.route("/<locale>/rooms/<int:room_id>")
     def room_detail_with_locale(locale: str, room_id: int):
         if locale in LANGUAGES:
             session["locale"] = locale
-        room = Room.query.get_or_404(room_id)
+        room = room_model.get_by_id(room_id)
+        if not room:
+            from flask import abort
+            abort(404)
         # 获取其他房间作为推荐房源（排除当前房间）
-        recommended_rooms = Room.query.filter(Room.id != room_id).limit(3).all()
+        all_rooms = room_model.get_all()
+        recommended_rooms = [r for r in all_rooms if r.get('id') != room_id][:3]
         return render_template("room_detail.html", room=room, recommended_rooms=recommended_rooms)
 
     @app.route("/booking")
@@ -585,7 +451,10 @@ def create_app() -> Flask:
 
     @app.route("/booking/success/<int:booking_id>")
     def booking_success(booking_id: int):
-        booking_record = Booking.query.get_or_404(booking_id)
+        booking_record = Booking.get_by_id(booking_id)
+        if not booking_record:
+            from flask import abort
+            abort(404)
         return render_template("booking_success.html", booking=booking_record)
 
     @app.route("/contact", methods=["GET", "POST"])
@@ -597,13 +466,12 @@ def create_app() -> Flask:
                 email=form.email.data,
                 content=form.message.data,
             )
-            db.session.add(message)
-            db.session.commit()
+            message.save()
             flash(translate("contact.flash.success"), "success")
             return redirect(url_for("contact"))
         
         # 获取联系信息内容
-        contact_content = SiteContent.query.filter_by(key="contact").first()
+        contact_content = SiteContent.get_by_key("contact")
         _normalize_contact_extra(contact_content)
         return render_template("contact.html", form=form, contact_content=contact_content)
 
@@ -618,13 +486,12 @@ def create_app() -> Flask:
                 email=form.email.data,
                 content=form.message.data,
             )
-            db.session.add(message)
-            db.session.commit()
+            message.save()
             flash(translate("contact.flash.success"), "success")
             return redirect(url_for("contact_with_locale", locale=locale))
         
         # 获取联系信息内容
-        contact_content = SiteContent.query.filter_by(key="contact").first()
+        contact_content = SiteContent.get_by_key("contact")
         _normalize_contact_extra(contact_content)
         return render_template("contact.html", form=form, contact_content=contact_content)
 
@@ -634,7 +501,7 @@ def create_app() -> Flask:
             return redirect(url_for("admin_dashboard"))
         form = LoginForm()
         if form.validate_on_submit():
-            admin = Admin.query.filter_by(username=form.username.data).first()
+            admin = Admin.get_by_username(form.username.data)
             if admin and admin.check_password(form.password.data):
                 login_user(admin)
                 flash("ログインしました", "success")
@@ -652,9 +519,9 @@ def create_app() -> Flask:
     @app.route("/admin", methods=["GET", "POST"])
     @login_required
     def admin_dashboard():
-        messages_count = Message.query.count()
-        news_count = News.query.count()
-        room_count = Room.query.count()
+        messages_count = len(message_model.get_all())
+        news_count = len(news_model.get_all())
+        room_count = len(room_model.get_all())
         last_backup_at = get_latest_backup_time()
         return render_template(
             "admin_dashboard.html",
@@ -674,7 +541,7 @@ def create_app() -> Flask:
     @app.route("/admin/rooms")
     @login_required
     def admin_rooms():
-        rooms = Room.query.order_by(Room.id).all()
+        rooms = room_model.get_all()
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             # AJAX请求，返回部分模板
             return render_template("admin_rooms_partial.html", rooms=rooms)
@@ -688,46 +555,98 @@ def create_app() -> Flask:
         form = RoomAdminForm()
         if form.validate_on_submit():
             try:
-                room = Room()
-                _update_room_from_form(room, form)
-                db.session.add(room)
-                db.session.commit()
+                # Handle image upload
+                image_path = None
+                if form.image_file.data:
+                    # Generate a temporary ID for the image filename
+                    temp_id = str(uuid.uuid4())
+                    image_path = _save_uploaded_file(form.image_file.data, temp_id)
+                else:
+                    image_path = form.image.data
+
+                room_data = {
+                    'name_ja': form.name_ja.data,
+                    'name_en': form.name_en.data,
+                    'name_zh': form.name_zh.data,
+                    'description_ja': form.description_ja.data,
+                    'description_en': form.description_en.data,
+                    'description_zh': form.description_zh.data,
+                    'price': form.price.data,
+                    'capacity': form.capacity.data,
+                    'address_ja': form.address_ja.data,
+                    'address_en': form.address_en.data,
+                    'address_zh': form.address_zh.data,
+                    'permit_number': form.permit_number.data,
+                    'image': image_path,
+                    'airbnb_url': form.airbnb_url.data,
+                    'name': form.name_ja.data,  # Legacy field
+                    'description': form.description_ja.data,  # Legacy field
+                }
+                room_model.create(**room_data)
                 flash("客室を作成しました", "success")
                 return redirect(url_for("admin_rooms"))
             except Exception as e:
-                db.session.rollback()
                 flash(f"作成中にエラーが発生しました: {str(e)}", "error")
         return render_template("admin_room_form.html", form=form, is_edit=False)
 
     @app.route("/admin/rooms/<int:room_id>/edit", methods=["GET", "POST"])
     @login_required
     def admin_room_edit(room_id: int):
-        room = Room.query.get_or_404(room_id)
+        room = room_model.get_by_id(room_id)
+        if not room:
+            from flask import abort
+            abort(404)
         form = RoomAdminForm(obj=room)
         if form.validate_on_submit():
             try:
-                _update_room_from_form(room, form)
-                db.session.commit()
+                # Handle image upload
+                image_path = None
+                if form.image_file.data:
+                    image_path = _save_uploaded_file(form.image_file.data, room_id)
+                else:
+                    image_path = form.image.data
+
+                update_data = {
+                    'name_ja': form.name_ja.data,
+                    'name_en': form.name_en.data,
+                    'name_zh': form.name_zh.data,
+                    'description_ja': form.description_ja.data,
+                    'description_en': form.description_en.data,
+                    'description_zh': form.description_zh.data,
+                    'price': form.price.data,
+                    'capacity': form.capacity.data,
+                    'address_ja': form.address_ja.data,
+                    'address_en': form.address_en.data,
+                    'address_zh': form.address_zh.data,
+                    'permit_number': form.permit_number.data,
+                    'image': image_path,
+                    'airbnb_url': form.airbnb_url.data,
+                    'name': form.name_ja.data,  # Legacy field
+                    'description': form.description_ja.data,  # Legacy field
+                }
+                room_model.update(room_id, **update_data)
                 flash("客室情報を更新しました", "success")
                 return redirect(url_for("admin_rooms"))
             except Exception as e:
-                db.session.rollback()
                 flash(f"更新中にエラーが発生しました: {str(e)}", "error")
         return render_template("admin_room_form.html", form=form, is_edit=True, room=room)
 
     @app.route("/admin/rooms/<int:room_id>/delete", methods=["POST"])
     @login_required
     def admin_room_delete(room_id: int):
-        room = Room.query.get_or_404(room_id)
-        db.session.delete(room)
-        db.session.commit()
+        room = room_model.get_by_id(room_id)
+        if not room:
+            from flask import abort
+            abort(404)
+        room.delete()
         flash("客室を削除しました", "info")
         return redirect(url_for("admin_rooms"))
 
     @app.route("/admin/news")
     @login_required
     def admin_news():
-        news_items = News.query.order_by(News.published_at.desc()).all()
+        news_items = news_model.get_all()
+        news_items.sort(key=lambda x: x.get('published_at', ''), reverse=True)
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return render_template("admin_news_partial.html", news_items=news_items)
         else:
@@ -738,10 +657,16 @@ def create_app() -> Flask:
     def admin_news_create():
         form = NewsForm()
         if form.validate_on_submit():
-            news = News()
-            _update_news_from_form(news, form)
-            db.session.add(news)
-            db.session.commit()
+            news_data = {
+                'title_ja': form.title_ja.data,
+                'title_en': form.title_en.data,
+                'title_zh': form.title_zh.data,
+                'body_ja': form.body_ja.data,
+                'body_en': form.body_en.data,
+                'body_zh': form.body_zh.data,
+                'is_published': form.is_published.data,
+            }
+            news_model.create(**news_data)
             flash("お知らせを公開しました", "success")
             return redirect(url_for("admin_news"))
         return render_template("admin_news_form.html", form=form, is_edit=False)
@@ -749,11 +674,22 @@ def create_app() -> Flask:
     @app.route("/admin/news/<int:news_id>/edit", methods=["GET", "POST"])
     @login_required
     def admin_news_edit(news_id: int):
-        news = News.query.get_or_404(news_id)
+        news = news_model.get_by_id(news_id)
+        if not news:
+            from flask import abort
+            abort(404)
         form = NewsForm(obj=news)
         if form.validate_on_submit():
-            _update_news_from_form(news, form)
-            db.session.commit()
+            update_data = {
+                'title_ja': form.title_ja.data,
+                'title_en': form.title_en.data,
+                'title_zh': form.title_zh.data,
+                'body_ja': form.body_ja.data,
+                'body_en': form.body_en.data,
+                'body_zh': form.body_zh.data,
+                'is_published': form.is_published.data,
+            }
+            news_model.update(news_id, **update_data)
             flash("お知らせを更新しました", "success")
             return redirect(url_for("admin_news"))
         return render_template("admin_news_form.html", form=form, is_edit=True, news_item=news)
@@ -761,16 +697,18 @@ def create_app() -> Flask:
     @app.route("/admin/news/<int:news_id>/delete", methods=["POST"])
     @login_required
     def admin_news_delete(news_id: int):
-        news = News.query.get_or_404(news_id)
-        db.session.delete(news)
-        db.session.commit()
+        news = news_model.get_by_id(news_id)
+        if not news:
+            from flask import abort
+            abort(404)
+        news.delete()
         flash("お知らせを削除しました", "info")
         return redirect(url_for("admin_news"))
 
     @app.route("/admin/contact-content", methods=["GET", "POST"])
     @login_required
     def admin_contact_content():
-        content = SiteContent.query.filter_by(key="contact").first()
+        content = SiteContent.get_by_key("contact")
         if not content:
             content = SiteContent(
                 key="contact",
@@ -782,8 +720,7 @@ def create_app() -> Flask:
                 body_zh="",
                 extra={},
             )
-            db.session.add(content)
-            db.session.flush()
+            content.save()
 
         _normalize_contact_extra(content)
 
@@ -815,7 +752,7 @@ def create_app() -> Flask:
                 "email": form.email.data,
                 "wechat_qr": form.wechat_qr.data,
             }
-            db.session.commit()
+            content.save()
             flash("お問い合わせ情報を更新しました", "success")
             return redirect(url_for("admin_contact_content"))
 
@@ -892,13 +829,17 @@ def create_app() -> Flask:
         if request.method == "POST":
             message_id = request.form.get("message_id", type=int)
             if message_id:
-                message = Message.query.get_or_404(message_id)
-                db.session.delete(message)
-                db.session.commit()
-                flash("メッセージを削除しました", "info")
+                message = message_model.get_by_id(message_id)
+                if message:
+                    message.delete()
+                    flash("メッセージを削除しました", "info")
+                else:
+                    flash("メッセージが見つかりません", "error")
             return redirect(url_for("admin_messages"))
 
-        messages = Message.query.order_by(Message.created_at.desc()).all()
+        messages = message_model.get_all()
+        # Sort by created_at descending
+        messages.sort(key=lambda x: x.created_at, reverse=True)
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return render_template("admin_messages_partial.html", messages=messages)
         else:
@@ -981,8 +922,8 @@ def create_app() -> Flask:
             return redirect(url_for("admin_dashboard"))
 
         filename = secure_filename(backup.filename)
-        if not filename.lower().endswith(".sql"):
-            message = "SQLファイルのみアップロードできます"
+        if not filename.lower().endswith((".tar.gz", ".json")):
+            message = "tar.gzまたはJSONファイルのみアップロードできます"
             if is_ajax:
                 return jsonify(status="error", message=message), 400
             flash(message, "error")
@@ -992,26 +933,50 @@ def create_app() -> Flask:
         temp_path = os.path.join(temp_dir, filename)
         backup.save(temp_path)
 
-        db_path = "db.db"
-        if not os.path.exists(db_path):
-            message = "データベースファイルが存在しません"
-            if is_ajax:
-                return jsonify(status="error", message=message), 500
-            flash(message, "error")
-            return redirect(url_for("admin_dashboard"))
-
         success = False
         message = ""
         backup_ts: datetime | None = None
 
         try:
-            subprocess.run(["sqlite3", db_path, f".read {temp_path}"], check=True)
+            import tarfile
+            import json
+            
+            if filename.lower().endswith(".tar.gz"):
+                # 处理tar.gz备份文件
+                with tarfile.open(temp_path, 'r:gz') as tar:
+                    tar.extractall(temp_dir)
+                
+                # 恢复JSON文件到data目录
+                data_files = ['rooms.json', 'bookings.json', 'messages.json', 'admins.json', 'news.json', 'site_content.json', 'users.json']
+                for data_file in data_files:
+                    extracted_path = os.path.join(temp_dir, data_file)
+                    if os.path.exists(extracted_path):
+                        target_path = os.path.join(data_manager.data_dir, data_file)
+                        shutil.copy2(extracted_path, target_path)
+                
+                # 恢复home_content.json到static/data目录
+                home_content_path = os.path.join(temp_dir, 'home_content.json')
+                if os.path.exists(home_content_path):
+                    target_path = os.path.join('static', 'data', 'home_content.json')
+                    os.makedirs(os.path.dirname(target_path), exist_ok=True)
+                    shutil.copy2(home_content_path, target_path)
+                    
+            elif filename.lower().endswith(".json"):
+                # 处理单个JSON文件
+                with open(temp_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                
+                # 根据文件名确定目标位置
+                if 'home_content' in filename:
+                    target_path = os.path.join('static', 'data', 'home_content.json')
+                    os.makedirs(os.path.dirname(target_path), exist_ok=True)
+                else:
+                    target_path = os.path.join(data_manager.data_dir, filename)
+                
+                with open(target_path, 'w', encoding='utf-8') as f:
+                    json.dump(data, f, ensure_ascii=False, indent=2)
+            
             backup_ts = datetime.now()
-            backup_dir = "backups"
-            os.makedirs(backup_dir, exist_ok=True)
-            latest_path = os.path.join(backup_dir, "latest.sql")
-            shutil.copy(temp_path, latest_path)
-            os.utime(latest_path, None)
             message = "バックアップをインポートしました"
             success = True
         except Exception as exc:  # pragma: no cover
@@ -1041,7 +1006,7 @@ def create_app() -> Flask:
         try:
             backup_files = []
             for filename in os.listdir(backup_dir):
-                if filename.startswith("guesthouse_backup_") and filename.endswith(".sql"):
+                if (filename.startswith("guesthouse_backup_") or filename.startswith("json_data_backup_")) and (filename.endswith(".sql") or filename.endswith(".tar.gz")):
                     file_path = os.path.join(backup_dir, filename)
                     file_stat = os.stat(file_path)
                     backup_files.append((file_path, file_stat.st_mtime))
@@ -1064,15 +1029,15 @@ def create_app() -> Flask:
     @app.route("/admin/backup")
     @login_required
     def admin_backup():
-        """导出数据库为SQL文件并保存到服务器"""
+        """导出JSON数据为备份文件并保存到服务器"""
         is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
         try:
-            # 获取数据库文件路径
-            db_path = "db.db"
+            # 检查数据目录是否存在
+            data_dir = "data"
             
-            if not os.path.exists(db_path):
-                message = "データベースファイルが存在しません"
+            if not os.path.exists(data_dir):
+                message = "データディレクトリが存在しません"
                 if is_ajax:
                     return jsonify(status="error", message=message), 500
                 flash(message, "error")
@@ -1084,81 +1049,30 @@ def create_app() -> Flask:
             
             # 生成备份文件名（包含时间戳）
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            backup_filename = f"guesthouse_backup_{timestamp}.sql"
+            backup_filename = f"json_data_backup_{timestamp}.tar.gz"
             backup_path = os.path.join(backup_dir, backup_filename)
             
-            # 使用sqlite3命令导出数据库
-            try:
-                # 尝试使用sqlite3命令行工具
-                result = subprocess.run([
-                    'sqlite3', db_path, '.dump'
-                ], capture_output=True, text=True, check=True)
+            # 创建tar.gz备份文件
+            import tarfile
+            with tarfile.open(backup_path, "w:gz") as tar:
+                # 添加所有JSON数据文件
+                json_files = [
+                    "rooms.json", "bookings.json", "messages.json", 
+                    "admins.json", "news.json", "site_content.json"
+                ]
                 
-                # 将输出写入备份文件
-                with open(backup_path, 'w', encoding='utf-8') as f:
-                    f.write(result.stdout)
+                for json_file in json_files:
+                    file_path = os.path.join(data_dir, json_file)
+                    if os.path.exists(file_path):
+                        tar.add(file_path, arcname=json_file)
                 
-            except (subprocess.CalledProcessError, FileNotFoundError):
-                # 如果sqlite3命令不可用，使用SQLAlchemy手动导出
-                with open(backup_path, 'w', encoding='utf-8') as f:
-                    f.write("-- 数据库备份文件\n")
-                    f.write(f"-- 导出时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-                    f.write("-- 数据库: guesthouse.db\n\n")
-                    
-                    # 导出表结构
-                    f.write("PRAGMA foreign_keys=OFF;\n")
-                    f.write("BEGIN TRANSACTION;\n\n")
-                    
-                    # 获取所有表
-                    inspector = inspect(db.engine)
-                    tables = inspector.get_table_names()
-                    
-                    for table in tables:
-                        # 导出表结构
-                        f.write(f"-- 表结构: {table}\n")
-                        f.write(f"CREATE TABLE IF NOT EXISTS `{table}` (\n")
-                        
-                        columns = inspector.get_columns(table)
-                        column_definitions = []
-                        for column in columns:
-                            col_def = f"  `{column['name']}` {column['type']}"
-                            if not column['nullable']:
-                                col_def += " NOT NULL"
-                            if column.get('default') is not None:
-                                col_def += f" DEFAULT {column['default']}"
-                            if column.get('primary_key'):
-                                col_def += " PRIMARY KEY"
-                            column_definitions.append(col_def)
-                        
-                        f.write(",\n".join(column_definitions))
-                        f.write("\n);\n\n")
-                        
-                        # 导出表数据
-                        f.write(f"-- 表数据: {table}\n")
-                        result = db.session.execute(text(f"SELECT * FROM `{table}`"))
-                        rows = result.fetchall()
-                        
-                        if rows:
-                            # 获取列名
-                            columns = [desc[0] for desc in result.description]
-                            
-                            for row in rows:
-                                values = []
-                                for value in row:
-                                    if value is None:
-                                        values.append("NULL")
-                                    elif isinstance(value, str):
-                                        # 转义单引号
-                                        escaped_value = value.replace("'", "''")
-                                        values.append(f"'{escaped_value}'")
-                                    else:
-                                        values.append(str(value))
-                                
-                                f.write(f"INSERT INTO `{table}` (`{'`, `'.join(columns)}`) VALUES ({', '.join(values)});\n")
-                        f.write("\n")
-                    
-                    f.write("COMMIT;\n")
-                    f.write("PRAGMA foreign_keys=ON;\n")
+                # 添加用户文件和主页内容
+                if os.path.exists("users.json"):
+                    tar.add("users.json", arcname="users.json")
+                
+                home_content_path = os.path.join("static", "data", "home_content.json")
+                if os.path.exists(home_content_path):
+                    tar.add(home_content_path, arcname="home_content.json")
             
             # 清理旧的备份文件（只保留最新的10个）
             cleanup_old_backups(backup_dir)
@@ -1176,16 +1090,19 @@ def create_app() -> Flask:
                     filename=backup_filename,
                     timestamp=backup_timestamp.isoformat()
                 )
-            
-            flash(message, "success")
-            return redirect(url_for("admin_dashboard"))
-            
+            else:
+                flash(message, "success")
+                return redirect(url_for("admin_dashboard"))
+                
         except Exception as e:
-            message = f"バックアップエクスポートに失敗しました: {str(e)}"
+            message = f"バックアップの作成に失敗しました: {str(e)}"
+            app.logger.exception("Backup creation failed")
+            
             if is_ajax:
                 return jsonify(status="error", message=message), 500
-            flash(message, "error")
-            return redirect(url_for("admin_dashboard"))
+            else:
+                flash(message, "error")
+                return redirect(url_for("admin_dashboard"))
 
     @app.route("/admin/backup/download/<filename>")
     @login_required
@@ -1277,7 +1194,7 @@ def create_app() -> Flask:
     # 500错误处理
     @app.errorhandler(500)
     def internal_error(error):
-        db.session.rollback()
+        # JSON模型不需要数据库会话回滚
         return render_template('500.html'), 500
 
     # 腾讯验证文件 - 写死路由

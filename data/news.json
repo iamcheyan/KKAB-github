@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "title_ja": "春の特別茶会プラン",
+    "title_en": "Spring Tea Ceremony Stay",
+    "title_zh": "春季特别茶会方案",
+    "body_ja": "春限定の朝茶会と夜の灯りの演出を含む宿泊プランを3月より開始します。",
+    "body_en": "Starting in March we offer a seasonal stay that includes a private morning tea ceremony and evening lantern experience.",
+    "body_zh": "自三月起推出包含早茶会与夜间灯光演出的春季住宿方案。",
+    "published_at": "2025-09-16 14:43:20.969486",
+    "is_published": true
+  },
+  {
+    "id": 2,
+    "title_ja": "夏の川床朝食",
+    "title_en": "Summer Riverside Breakfast",
+    "title_zh": "夏日鸭川河床早餐",
+    "body_ja": "鴨川沿いのテラスで楽しむ京野菜たっぷりの朝食を提供開始しました。",
+    "body_en": "We now serve a Kamogawa riverside breakfast featuring seasonal Kyoto vegetables on the terrace.",
+    "body_zh": "现已提供鸭川露台上的京野菜早餐体验。",
+    "published_at": "2025-09-16 14:43:20.969491",
+    "is_published": true
+  }
+]

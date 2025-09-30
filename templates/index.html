@@ -180,7 +180,7 @@
     {% for item in news_items %}
       <div class="list-group-item">
         <h3 class="h5 title-serif">{{ localize(item, 'title') }}</h3>
-        <div class="text-muted small">{{ item.published_at.strftime('%Y-%m-%d') }}</div>
+        <div class="text-muted small">{{ item.published_at }}</div>
         <p class="mb-2">{{ localize(item, 'body') }}</p>
       </div>
     {% endfor %}

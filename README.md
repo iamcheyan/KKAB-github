@@ -24,9 +24,10 @@
 
 ## 🚀 快速开始
 
-### 环境要求
+### 系统要求
+
 - Python 3.8+
-- SQLite 3
+- JSON文件系统支持
 - 现代浏览器
 
 ### 安装步骤
@@ -74,7 +75,13 @@ GuestHouse/
 ├── models.py              # 数据模型
 ├── forms.py               # 表单定义
 ├── translations.py        # 多语言翻译
-├── db.db                  # SQLite数据库
+├── data/                   # JSON数据文件目录
+│   ├── rooms.json         # 房间数据
+│   ├── bookings.json      # 预订数据
+│   ├── messages.json      # 消息数据
+│   ├── admins.json        # 管理员数据
+│   ├── news.json          # 新闻数据
+│   └── site_content.json  # 站点内容数据
 ├── users.json             # 用户配置文件
 ├── requirements.txt       # Python依赖
 ├── static/                # 静态资源
@@ -114,10 +121,9 @@ GuestHouse/
 
 ### 后端
 - **Flask** - Python Web框架
-- **SQLAlchemy** - ORM数据库操作
 - **Flask-Login** - 用户认证管理
 - **Flask-WTF** - 表单处理和CSRF保护
-- **SQLite** - 轻量级数据库
+- **JSON** - 数据存储
 
 ### 前端
 - **Bootstrap 5** - CSS框架
@@ -129,7 +135,7 @@ GuestHouse/
 ### 开发工具
 - **Python 3.8+** - 编程语言
 - **Git** - 版本控制
-- **SQLite** - 数据库
+- **JSON存储** - 数据存储
 
 ## 📱 功能详解
 
@@ -171,14 +177,14 @@ GuestHouse/
 
 ## 🛠️ 配置说明
 
-### 数据库配置
-数据库文件位于根目录的 `db.db`，包含以下表：
-- `room` - 房源信息
-- `booking` - 预订记录
-- `message` - 客户消息
-- `news` - 新闻内容
-- `site_content` - 网站内容
-- `admin` - 管理员账户
+### 数据存储
+系统使用JSON文件存储数据，所有数据文件位于 `data/` 目录下：
+- **rooms.json** - 房间信息
+- **bookings.json** - 预订记录  
+- **messages.json** - 联系消息
+- **admins.json** - 管理员账户
+- **news.json** - 新闻文章
+- **site_content.json** - 站点内容配置
 
 ### 用户管理
 用户信息存储在 `users.json` 文件中，支持：
@@ -201,7 +207,7 @@ GuestHouse/
    - Linux/Unix系统
    - Python 3.8+
    - Nginx或Apache
-   - SQLite支持
+   - JSON文件系统支持
 
 2. **部署步骤**
 ```bash
@@ -262,7 +268,7 @@ CMD ["python", "app.py"]
 ## 🔒 安全特性
 
 - **CSRF保护** - 所有表单都有CSRF令牌
-- **SQL注入防护** - 使用SQLAlchemy ORM
+- **数据安全** - JSON文件安全存储
 - **XSS防护** - 模板自动转义
 - **用户认证** - 安全的登录系统
 - **文件上传安全** - 限制文件类型和大小
@@ -279,11 +285,15 @@ CMD ["python", "app.py"]
 
 ### 常见问题
 
-1. **数据库连接错误**
-   - 检查 `db.db` 文件权限
-   - 确保SQLite已安装
+1. **数据文件权限问题**
+   - 检查 `data/` 目录权限
+   - 确保JSON文件可读写
 
-2. **图片不显示**
+2. **端口占用**
+   - 修改 `app.py` 中的端口设置
+   - 或使用 `lsof -i :5050` 检查端口占用
+
+3. **图片不显示**
    - 检查 `static/img/` 目录
    - 验证图片路径正确性
 
