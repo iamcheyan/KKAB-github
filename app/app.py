@@ -203,31 +203,46 @@ def create_app() -> Flask:
             project_root = os.path.dirname(os.path.dirname(__file__))
             os.makedirs(project_root, exist_ok=True)
 
-            def _write_html(route: str, out_rel_path: str) -> None:
-                out_path = os.path.join(project_root, out_rel_path)
-                os.makedirs(os.path.dirname(out_path), exist_ok=True)
+            def _write_html(route: str, out_rel_path: str, duplicate_html: bool = True) -> None:
+                # 目录式输出：如果 out_rel_path 以 '/' 结尾或不含扩展名，则写入 path/index.html
+                # 另外可选生成同名 .html 以便直接访问文件
+                target_dir = os.path.join(project_root, out_rel_path)
+                # 判定是否为目录式
+                if out_rel_path.endswith('/') or not os.path.splitext(out_rel_path)[1]:
+                    out_dir = target_dir.rstrip('/')
+                    os.makedirs(out_dir, exist_ok=True)
+                    file_path_primary = os.path.join(out_dir, 'index.html')
+                    file_path_alias = (out_dir + '.html') if duplicate_html else None
+                else:
+                    os.makedirs(os.path.dirname(target_dir), exist_ok=True)
+                    file_path_primary = target_dir
+                    file_path_alias = None
                 with app.test_client() as client:
                     resp = client.get(route)
                     if resp.status_code != 200:
                         return
                     html = resp.get_data(as_text=True)
-                    # 将 Flask 的 /static/ 路径重写为 GitHub Pages 的 app/static/
-                    html = html.replace('"/static/', '"app/static/').replace("'/static/", "'app/static/")
-                with open(out_path, 'w', encoding='utf-8') as f:
+                    # 将 Flask 的 /static/ 路径重写为根级 /app/static/，避免子目录相对路径问题
+                    html = html.replace('"/static/', '"/app/static/').replace("'/static/", "'/app/static/")
+                with open(file_path_primary, 'w', encoding='utf-8') as f:
                     f.write(html)
+                if file_path_alias:
+                    # 兼容形式，例如 rooms/index.html 同时生成 rooms.html
+                    with open(file_path_alias, 'w', encoding='utf-8') as f:
+                        f.write(html)
 
             # 基础页面
             _write_html('/', 'index.html')
-            _write_html('/rooms', 'rooms.html')
-            _write_html('/contact', 'contact.html')
-            _write_html('/management', 'management.html')
+            _write_html('/rooms', 'rooms/')
+            _write_html('/contact', 'contact/')
+            _write_html('/management', 'management/')
 
             # 多语言首页/页面
             for lang in LANGUAGES:
                 _write_html(f'/{lang}/', os.path.join(lang, 'index.html'))
-                _write_html(f'/{lang}/rooms', os.path.join(lang, 'rooms.html'))
-                _write_html(f'/{lang}/contact', os.path.join(lang, 'contact.html'))
-                _write_html(f'/{lang}/management', os.path.join(lang, 'management.html'))
+                _write_html(f'/{lang}/rooms', os.path.join(lang, 'rooms/'))
+                _write_html(f'/{lang}/contact', os.path.join(lang, 'contact/'))
+                _write_html(f'/{lang}/management', os.path.join(lang, 'management/'))
 
             # 房间详情页面（含多语言）
             try:
@@ -238,9 +253,9 @@ def create_app() -> Flask:
                 rid = room.get('id')
                 if not rid:
                     continue
-                _write_html(f'/rooms/{rid}', os.path.join('rooms', f'{rid}.html'))
+                _write_html(f'/rooms/{rid}', os.path.join('rooms', f'{rid}/'))
                 for lang in LANGUAGES:
-                    _write_html(f'/{lang}/rooms/{rid}', os.path.join(lang, 'rooms', f'{rid}.html'))
+                    _write_html(f'/{lang}/rooms/{rid}', os.path.join(lang, 'rooms', f'{rid}/'))
 
             print("[static] 静态页已生成到项目根目录（静态资源前缀 app/static/）")
         except Exception as e:
@@ -1380,17 +1395,22 @@ if __name__ == "__main__":
     import os
     import sys
     import socket
+    import argparse
+
+    parser = argparse.ArgumentParser(description="GuestHouse 开发服务器与静态导出")
+    parser.add_argument("port", nargs="?", type=int, help="HTTP 端口号 (默认 5050)")
+    parser.add_argument("--build-static", action="store_true", help="仅生成静态页后退出")
+    args = parser.parse_args()
+
+    if args.build_static or os.getenv("BUILD_STATIC") == "1":
+        # 仅生成静态站点
+        _ = create_app()
+        print("[static] 仅生成静态站点完成 (BUILD_STATIC)")
+        sys.exit(0)
 
     port = 5050
-
-    if len(sys.argv) > 1:
-        try:
-            port = int(sys.argv[1])
-        except ValueError:
-            print(f"错误：端口号 '{sys.argv[1]}' 不是有效的数字")
-            print("使用方法：python app.py [端口号]")
-            print("例如：python app.py 8080")
-            sys.exit(1)
+    if args.port is not None:
+        port = args.port
     elif os.getenv("FLASK_PORT"):
         try:
             port = int(os.getenv("FLASK_PORT"))
@@ -1406,7 +1426,7 @@ if __name__ == "__main__":
                 sock.bind(("0.0.0.0", port))
         except OSError:
             print(f"错误：端口 {port} 已被占用")
-            print("请尝试其他端口，例如：python app.py 8080")
+            print("请尝试其他端口，例如：python app/app.py 8080")
             sys.exit(1)
 
         print(f"启动Flask应用，端口：{port}")
