@@ -224,6 +224,22 @@ def create_app() -> Flask:
                     html = resp.get_data(as_text=True)
                     # 将 Flask 的 /static/ 路径重写为根级 /app/static/，避免子目录相对路径问题
                     html = html.replace('"/static/', '"/app/static/').replace("'/static/", "'/app/static/")
+                    # 语言切换链接重写：/lang/<code>?next=/[cur]/rest -> /<code>/rest
+                    import re
+                    def _rewrite(m):
+                        quote = m.group(1)
+                        target = m.group(2)
+                        next_path = m.group(3) or ""
+                        # 去掉现有语言前缀
+                        for lg in LANGUAGES:
+                            if next_path.startswith(lg + "/"):
+                                next_path = next_path[len(lg)+1:]
+                                break
+                        if next_path and not next_path.endswith('/') and not next_path.split('#')[0].split('?')[0].endswith('.html'):
+                            # 保持目录式，若为空则只返回 /<target>/
+                            pass
+                        return f"{quote}/{target}/" + next_path
+                    html = re.sub(r"([\"\'])/lang/([a-zA-Z\-]{2,})\?next=/([^\"\']*)", _rewrite, html)
                 with open(file_path_primary, 'w', encoding='utf-8') as f:
                     f.write(html)
                 if file_path_alias:

@@ -1,4 +1,10 @@
-"""Simple translation mappings for the GuestHouse site."""
+"""Simple translation mappings for the GuestHouse site.
+
+支持从 JSON 配置覆盖：若存在 `app/data/i18n.json`，将以其中的
+- languages: 覆盖可用语言列表
+- default:   覆盖默认语言
+- translations: 合并键值（不存在的键将新增，已存在的语言键将覆盖）
+"""
 
 from __future__ import annotations
 
@@ -674,3 +680,34 @@ TRANSLATIONS = {
         "zh": "请选择今天之后的日期。",
     },
 }
+
+# 可选：从 JSON 配置覆盖语言列表与翻译
+try:  # 在导入期执行，失败则静默回落到内置字典
+    import os
+    import json
+
+    _base_dir = os.path.dirname(__file__)
+    _json_path = os.path.join(_base_dir, "data", "i18n.json")
+    if os.path.exists(_json_path):
+        with open(_json_path, "r", encoding="utf-8") as _fp:
+            _cfg = json.load(_fp) or {}
+
+        _langs = _cfg.get("languages")
+        if isinstance(_langs, list) and _langs:
+            LANGUAGES = [str(x) for x in _langs]
+
+        _default = _cfg.get("default")
+        if isinstance(_default, str) and _default:
+            DEFAULT_LANGUAGE = _default
+
+        _overrides = _cfg.get("translations") or {}
+        if isinstance(_overrides, dict):
+            for _key, _val in _overrides.items():
+                if not isinstance(_val, dict):
+                    continue
+                _existing = TRANSLATIONS.get(_key, {})
+                _existing.update({k: v for k, v in _val.items() if isinstance(v, str)})
+                TRANSLATIONS[_key] = _existing
+except Exception:
+    # 安全回退到内置常量
+    pass

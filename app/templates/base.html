@@ -56,7 +56,6 @@
               <li class="nav-item"><a class="nav-link" href="{% if current_locale == 'ja' %}{{ url_for('management') }}{% else %}{{ url_for('management_with_locale', locale=current_locale) }}{% endif %}">{{ t('nav.management') }}</a></li>
               {# 预订入口改为直接在各处跳转 Airbnb，导航不再显示独立"预订" #}
               <li class="nav-item"><a class="nav-link" href="{% if current_locale == 'ja' %}{{ url_for('contact') }}{% else %}{{ url_for('contact_with_locale', locale=current_locale) }}{% endif %}">{{ t('nav.contact') }}</a></li>
-              <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_login') }}">{{ t('nav.admin') }}</a></li>
               {% if not request.path.startswith('/admin') %}
               <li class="nav-item">
                 <div class="d-flex align-items-center gap-1">
