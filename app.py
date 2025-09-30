@@ -119,6 +119,19 @@ def create_app() -> Flask:
     def localized_attr(model, base: str) -> str:
         locale = get_locale()
         attr_name = f"{base}_{locale}"
+        
+        # Handle dictionary objects (from JSON models)
+        if isinstance(model, dict):
+            value = model.get(attr_name)
+            if value:
+                return value
+            fallback = model.get(base)
+            if fallback:
+                return fallback
+            default_attr = f"{base}_{DEFAULT_LANGUAGE}"
+            return model.get(default_attr, "")
+        
+        # Handle object attributes (legacy support)
         if hasattr(model, attr_name):
             value = getattr(model, attr_name)
             if value:
@@ -178,7 +191,7 @@ def create_app() -> Flask:
 
     @login_manager.user_loader
     def load_user(user_id: str):
-        return Admin.get_by_id(int(user_id))
+        return Admin.get_by_id(data_manager, int(user_id))
 
     @app.context_processor
     def inject_globals():
@@ -233,7 +246,7 @@ def create_app() -> Flask:
 
         def home_text(key: str) -> str:
             if not _home_cache["loaded"]:
-                _home_cache["content"] = SiteContent.get_by_key("home")
+                _home_cache["content"] = site_content_model.get_by_key("home")
                 _home_cache["loaded"] = True
             content: SiteContent | None = _home_cache["content"]
             locale = get_locale()
@@ -321,24 +334,57 @@ def create_app() -> Flask:
                 cleaned = cleaned[len("static/") :]
             return cleaned
 
-        extra = dict(content.extra or {})
         updated = False
 
-        wechat_path = _clean_path(extra.get("wechat_qr"))
-        if not wechat_path or wechat_path.endswith("wechat_qr.svg"):
-            wechat_path = "img/wx.jpg"
-        if extra.get("wechat_qr") != wechat_path:
-            extra["wechat_qr"] = wechat_path
-            updated = True
+        # 同时兼容 dict（JSON记录）与具有属性的对象两种形式
+        if isinstance(content, dict):
+            extra = dict(content.get("extra") or {})
 
-        line_path = _clean_path(extra.get("line_qr")) or "img/line.jpg"
-        if extra.get("line_qr") != line_path:
-            extra["line_qr"] = line_path
-            updated = True
+            wechat_path = _clean_path(extra.get("wechat_qr"))
+            if not wechat_path or wechat_path.endswith("wechat_qr.svg"):
+                wechat_path = "img/wx.jpg"
+            if extra.get("wechat_qr") != wechat_path:
+                extra["wechat_qr"] = wechat_path
+                updated = True
 
-        if updated:
-            content.extra = extra
-            content.save()
+            line_path = _clean_path(extra.get("line_qr")) or "img/line.jpg"
+            if extra.get("line_qr") != line_path:
+                extra["line_qr"] = line_path
+                updated = True
+
+            if updated:
+                content["extra"] = extra
+                content_id = content.get("id")
+                if content_id is not None:
+                    # 将修正写回存储
+                    site_content_model.update(content_id, extra=extra)
+        else:
+            # 对象形式：访问属性并调用保存方法
+            try:
+                extra = dict(getattr(content, "extra", {}) or {})
+            except Exception:
+                extra = {}
+
+            wechat_path = _clean_path(extra.get("wechat_qr"))
+            if not wechat_path or wechat_path.endswith("wechat_qr.svg"):
+                wechat_path = "img/wx.jpg"
+            if extra.get("wechat_qr") != wechat_path:
+                extra["wechat_qr"] = wechat_path
+                updated = True
+
+            line_path = _clean_path(extra.get("line_qr")) or "img/line.jpg"
+            if extra.get("line_qr") != line_path:
+                extra["line_qr"] = line_path
+                updated = True
+
+            if updated:
+                try:
+                    content.extra = extra
+                    # 若对象有 save 方法则持久化
+                    if hasattr(content, "save") and callable(getattr(content, "save")):
+                        content.save()
+                except Exception:
+                    pass
 
     @app.route("/")
     def index():
@@ -471,7 +517,7 @@ def create_app() -> Flask:
             return redirect(url_for("contact"))
         
         # 获取联系信息内容
-        contact_content = SiteContent.get_by_key("contact")
+        contact_content = site_content_model.get_by_key("contact")
         _normalize_contact_extra(contact_content)
         return render_template("contact.html", form=form, contact_content=contact_content)
 
@@ -491,7 +537,7 @@ def create_app() -> Flask:
             return redirect(url_for("contact_with_locale", locale=locale))
         
         # 获取联系信息内容
-        contact_content = SiteContent.get_by_key("contact")
+        contact_content = site_content_model.get_by_key("contact")
         _normalize_contact_extra(contact_content)
         return render_template("contact.html", form=form, contact_content=contact_content)
 
@@ -501,7 +547,7 @@ def create_app() -> Flask:
             return redirect(url_for("admin_dashboard"))
         form = LoginForm()
         if form.validate_on_submit():
-            admin = Admin.get_by_username(form.username.data)
+            admin = Admin.get_by_username(data_manager, form.username.data)
             if admin and admin.check_password(form.password.data):
                 login_user(admin)
                 flash("ログインしました", "success")
@@ -708,9 +754,9 @@ def create_app() -> Flask:
     @app.route("/admin/contact-content", methods=["GET", "POST"])
     @login_required
     def admin_contact_content():
-        content = SiteContent.get_by_key("contact")
+        content = site_content_model.get_by_key("contact")
         if not content:
-            content = SiteContent(
+            content = site_content_model.create(
                 key="contact",
                 heading_ja="お問い合わせ",
                 heading_en="Contact",
@@ -720,14 +766,19 @@ def create_app() -> Flask:
                 body_zh="",
                 extra={},
             )
-            content.save()
 
         _normalize_contact_extra(content)
 
-        form = ContactContentForm(obj=content)
-        extra = content.extra or {}
+        form = ContactContentForm()
+        extra = content.get('extra', {})
         addresses = extra.get("address", {})
         if request.method == "GET":
+            form.heading_ja.data = content.get('heading_ja', '')
+            form.heading_en.data = content.get('heading_en', '')
+            form.heading_zh.data = content.get('heading_zh', '')
+            form.body_ja.data = content.get('body_ja', '')
+            form.body_en.data = content.get('body_en', '')
+            form.body_zh.data = content.get('body_zh', '')
             form.address_ja.data = addresses.get("ja", "")
             form.address_en.data = addresses.get("en", "")
             form.address_zh.data = addresses.get("zh", "")
@@ -736,23 +787,25 @@ def create_app() -> Flask:
             form.wechat_qr.data = extra.get("wechat_qr", "")
 
         if form.validate_on_submit():
-            content.heading_ja = form.heading_ja.data
-            content.heading_en = form.heading_en.data
-            content.heading_zh = form.heading_zh.data
-            content.body_ja = form.body_ja.data
-            content.body_en = form.body_en.data
-            content.body_zh = form.body_zh.data
-            content.extra = {
-                "address": {
-                    "ja": form.address_ja.data,
-                    "en": form.address_en.data,
-                    "zh": form.address_zh.data,
-                },
-                "phone": form.phone.data,
-                "email": form.email.data,
-                "wechat_qr": form.wechat_qr.data,
+            update_data = {
+                'heading_ja': form.heading_ja.data,
+                'heading_en': form.heading_en.data,
+                'heading_zh': form.heading_zh.data,
+                'body_ja': form.body_ja.data,
+                'body_en': form.body_en.data,
+                'body_zh': form.body_zh.data,
+                'extra': {
+                    "address": {
+                        "ja": form.address_ja.data,
+                        "en": form.address_en.data,
+                        "zh": form.address_zh.data,
+                    },
+                    "phone": form.phone.data,
+                    "email": form.email.data,
+                    "wechat_qr": form.wechat_qr.data,
+                }
             }
-            content.save()
+            site_content_model.update(content['id'], **update_data)
             flash("お問い合わせ情報を更新しました", "success")
             return redirect(url_for("admin_contact_content"))
 
